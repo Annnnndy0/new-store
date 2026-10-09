@@ -282,7 +282,7 @@ button {
   z-index: 1;
   min-height: 0;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto;
   padding: clamp(22px, 2.5vw, 44px) clamp(22px, 2.3vw, 40px) clamp(20px, 2.2vw, 38px);
   background: var(--paper);
   border-radius: var(--r-panel);
@@ -442,6 +442,62 @@ button {
   letter-spacing: -0.005em;
   animation: rise 1.1s var(--ease-out) 0.42s both;
 }
+
+/* Dos botones bajo el texto: la ficha del producto y añadir al carrito (con su precio) */
+.product__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: clamp(14px, 1.4vw, 24px);
+  animation: rise 1.1s var(--ease-out) 0.54s both;
+}
+
+.pbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: clamp(44px, 3.2vw, 52px);
+  padding: 0 clamp(18px, 1.5vw, 24px);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font: 500 clamp(14px, 0.95vw, 15.5px)/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out),
+    transform 0.5s var(--ease-out);
+}
+
+.pbtn i { font-size: 1.1em; transition: translate 0.5s var(--ease-out); }
+
+.pbtn--ghost { background: var(--paper); color: var(--ink); }
+.pbtn--ghost:hover { background: var(--ink); color: var(--paper); }
+.pbtn--ghost:hover i { translate: 2px -2px; }
+
+.pbtn--buy {
+  padding-right: 6px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.pbtn--buy:hover { background: #262626; border-color: #262626; }
+
+/* El precio, en su propia píldora dentro del botón */
+.pbtn__price {
+  display: grid;
+  place-items: center;
+  height: calc(100% - 12px);
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.14);
+  font-variant-numeric: tabular-nums;
+}
+
+.pbtn:active { transform: scale(0.97); }
 
 @keyframes rise {
   from { opacity: 0; transform: translateY(14px); }
@@ -1031,8 +1087,14 @@ button {
   gap: calc(var(--pop) + var(--cgap)) var(--cgap);
 }
 
-@container order (min-width: 1180px) {
-  .order__grid { grid-template-columns: repeat(4, min(var(--cw), (100% - 3 * var(--cgap)) / 4)); }
+/* 4 en fila también en el laptop: por debajo del tamaño de la referencia, las tarjetas encogen con
+   el ancho (y su objeto, que asoma, con ellas) en lugar de pasar a 2 × 2 */
+@container order (min-width: 860px) {
+  .order__grid {
+    --cw4: min(var(--cw), (100cqi - 3 * var(--cgap)) / 4);
+    --pop: calc(var(--cw4) * 0.15);
+    grid-template-columns: repeat(4, var(--cw4));
+  }
 }
 
 /* Doble bisel: bandeja de lino con la luz arriba y, dentro, un panel blanco con el texto */
@@ -1155,6 +1217,29 @@ button {
   .ostep:hover .ostep__obj img { --lift: 12px; --tilt: -3deg; }
 }
 
+/* Mientras encogen en fila (ver .order__grid), el texto, los márgenes y las esquinas van en
+   proporción a la tarjeta (--cw4, 316 px en la referencia) */
+@container order (min-width: 860px) and (max-width: 1399px) {
+  .ostep {
+    --r: calc(var(--cw4) * 0.095);
+    --bezel: calc(var(--cw4) * 0.025);
+  }
+
+  .ostep__panel {
+    min-height: 54%;   /* con el texto más apretado, sigue cabiendo en todos y siguen igual de altos */
+    gap: calc(var(--cw4) * 0.032);
+    padding: calc(var(--cw4) * 0.095) calc(var(--cw4) * 0.06) calc(var(--cw4) * 0.1);
+  }
+
+  .ostep__title { font-size: clamp(16px, calc(var(--cw4) * 0.076), 26px); }
+  /* Hueco para 4 líneas en todas: el texto más largo las ocupa y los paneles quedan igual de altos */
+  .ostep__text {
+    max-width: none;
+    min-height: calc(4 * 1.6em);
+    font-size: clamp(12px, calc(var(--cw4) * 0.0445), 15px);
+  }
+}
+
 /* ----- Zonas de envío ----- */
 
 /* Una banda del ancho de la fila de tarjetas: intro, UE y fuera de la UE. En tres columnas
@@ -1188,7 +1273,9 @@ button {
 
 .ship__zone { border-top: 1px solid var(--hair); }
 
-@container order (min-width: 1180px) {
+/* En fila desde el mismo ancho que las tarjetas (ver .order__grid): con ellas encogidas, la fila
+   ocupa todo el ancho, y la banda también */
+@container order (min-width: 860px) {
   .ship {
     --row-w: calc(4 * var(--cw) + 3 * var(--cgap));
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.45fr) minmax(0, 0.9fr);
@@ -1198,6 +1285,13 @@ button {
     border-top: 0;
     border-left: 1px solid var(--hair);
   }
+}
+
+/* En el laptop, columnas un poco más apretadas para que las fichas de país quepan mejor */
+@container order (min-width: 860px) and (max-width: 1179px) {
+  .ship :is(.ship__intro, .ship__zone) { padding-inline: clamp(18px, 2.2cqi, 28px); }
+  .ship__list { gap: 6px; }
+  .ship__list li { padding: 0 10px 0 9px; }
 }
 
 .ship__kicker {
@@ -2922,7 +3016,7 @@ button {
   }
 
   .product {
-    grid-template-rows: auto clamp(340px, 62svh, 560px) auto auto;
+    grid-template-rows: auto clamp(340px, 62svh, 560px) auto auto auto;
     padding-bottom: 64px;   /* aire para la pestaña del indicador de scroll */
   }
 
@@ -3010,6 +3104,7 @@ button {
   .bottle,
   .product__title,
   .product__copy,
+  .product__actions,
   .scroll-cue,
   .scroll-cue svg { animation: none; }
 

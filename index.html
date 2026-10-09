@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Instrument+Serif:ital@1&family=Questrial&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css">
-  <link rel="stylesheet" href="styles.css?v=33">
+  <link rel="stylesheet" href="styles.css?v=40">
   <link rel="stylesheet" href="site.css?v=1">
 </head>
 <body>
@@ -158,9 +158,9 @@
           </div>
 
           <img class="bottle" src="assets/product1.webp" width="688" height="1230" fetchpriority="high"
-               alt="Frasco gotero de vidrio ámbar con aceite de CBD">
+               alt="Envase de Producto 1" data-pslide-img>
 
-          <button class="drop-next" type="button" aria-label="Siguiente producto">
+          <button class="drop-next" type="button" aria-label="Siguiente producto" aria-controls="product-title" data-pslide-next>
             <svg viewBox="0 0 96 72" aria-hidden="true">
               <path d="M60 2A34 34 0 1 1 60 70C47 70 38 62 24 52C14 45 6 40 6 36C6 32 14 27 24 20C38 10 47 2 60 2Z" />
             </svg>
@@ -168,13 +168,24 @@
           </button>
         </div>
 
-        <h1 class="product__title" id="product-title">Oils</h1>
-        <p class="product__copy">
-          CBD oil, or cannabidiol oil, is a natural extract from hemp that does not have psychoactive effects.
-          It is valued for its potential medicinal properties, such as alleviating pain, inflammation, anxiety
-          and insomnia. In cosmetics, it helps moisturize the skin and soothe irritations. It is advisable to
-          consult a doctor before use.
+        <!-- La flecha (product-slider, abajo) recorre los 4 productos: cambia el título, el texto y
+             los dos botones. Sin JS se queda en el producto 1. Textos de muestra. -->
+        <h1 class="product__title" id="product-title" data-pslide-title>Producto 1</h1>
+        <p class="product__copy" data-pslide-copy>
+          Extracto natural de cáñamo sin efectos psicoactivos, valorado por su ayuda frente al dolor, la
+          inflamación y el insomnio. Consulta a tu médico antes de usarlo.
         </p>
+        <div class="product__actions" data-pslide-actions>
+          <a class="pbtn pbtn--ghost" href="productos/producto-1/" data-pslide-more>
+            <span>Más detalles</span>
+            <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+          </a>
+          <button class="pbtn pbtn--buy" type="button" data-add="p1" aria-label="Añadir Producto 1 al carrito">
+            <span>Añadir al carrito</span>
+            <span class="pbtn__price" data-pslide-price>24,90&nbsp;€</span>
+          </button>
+        </div>
+        <p class="sr-only" aria-live="polite" data-pslide-status></p>
       </section>
 
       <!-- Indicador de scroll: una pestaña del marco que entra en el escenario -->
@@ -1186,6 +1197,79 @@
       const on = btn.getAttribute('aria-pressed') !== 'true';
       btn.setAttribute('aria-pressed', String(on));
       btn.closest('.product').classList.toggle('is-zoomed', on);
+    });
+
+    // Flecha del hero: pasa al siguiente de los 4 productos (vuelve al primero tras el último).
+    // Nombre, precio y ficha salen de catalog.js (diferido: por eso espera a DOMContentLoaded);
+    // los textos son de muestra.
+    document.addEventListener('DOMContentLoaded', () => {
+      const C = window.CATALOG;
+      const next = document.querySelector('[data-pslide-next]');
+      if (!C || !next) return;
+
+      const COPY = {
+        p1: 'Extracto natural de cáñamo sin efectos psicoactivos, valorado por su ayuda frente al dolor, la inflamación y el insomnio. Consulta a tu médico antes de usarlo.',
+        p2: 'Fórmula de liberación prolongada para mantener un efecto estable durante todo el día, con una sola toma por la mañana.',
+        p3: 'Concentración más alta para quien ya conoce su pauta y busca un alivio más intenso en menos tiempo.',
+        p4: 'Nuestra fórmula más completa: combina extracto de espectro amplio con ingredientes que apoyan el descanso y la recuperación.',
+      };
+
+      const ids = Object.keys(C.products);
+      const product = next.closest('.product');
+      const img = product.querySelector('[data-pslide-img]');
+      const title = product.querySelector('[data-pslide-title]');
+      const copy = product.querySelector('[data-pslide-copy]');
+      const more = product.querySelector('[data-pslide-more]');
+      const buy = product.querySelector('[data-add]');
+      const price = product.querySelector('[data-pslide-price]');
+      const status = product.querySelector('[data-pslide-status]');
+      const text = [title, copy, product.querySelector('[data-pslide-actions]')];
+      const fmt = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
+      let i = 0;
+      let busy = false;
+
+      function show(id) {
+        const p = C.products[id];
+        img.src = p.img;
+        img.alt = `Envase de ${p.name}`;
+        title.textContent = p.name;
+        copy.textContent = COPY[id] || '';
+        more.href = p.url;
+        buy.dataset.add = id;
+        buy.setAttribute('aria-label', `Añadir ${p.name} al carrito`);
+        price.textContent = fmt.format(p.price);
+        status.textContent = `${p.name}, ${i + 1} de ${ids.length}`;
+      }
+
+      // El envase sale hacia la izquierda girando un poco y el siguiente entra por la derecha;
+      // el texto baja y se desvanece, y vuelve a subir ya cambiado (cada línea un poco después)
+      next.addEventListener('click', async () => {
+        if (busy) return;
+        i = (i + 1) % ids.length;
+        // Sin animación si se pide menos movimiento o la pestaña no se ve (ahí no avanzarían)
+        if (reduce.matches || document.hidden) { show(ids[i]); return; }
+
+        busy = true;
+        const out = { duration: 380, easing: 'cubic-bezier(0.55, 0, 1, 0.45)', fill: 'forwards' };
+        const leaving = [
+          img.animate({ opacity: [1, 0], transform: ['none', 'translateX(-28%) rotate(-8deg) scale(0.92)'] }, out),
+          ...text.map((el, k) => el.animate({ opacity: [1, 0], transform: ['none', 'translateY(10px)'] }, { ...out, delay: k * 40 })),
+        ];
+        await Promise.all(leaving.map((a) => a.finished));
+        show(ids[i]);
+        await new Promise((r) => (img.complete ? r() : img.addEventListener('load', r, { once: true })));
+        const inn = { duration: 760, easing: ease, fill: 'both' };
+        const entering = [
+          img.animate({ opacity: [0, 1], transform: ['translateX(28%) rotate(8deg) scale(0.92)', 'none'] }, inn),
+          ...text.map((el, k) => el.animate({ opacity: [0, 1], transform: ['translateY(14px)', 'none'] }, { ...inn, delay: 90 + k * 70 })),
+        ];
+        leaving.forEach((a) => a.cancel());
+        await Promise.all(entering.map((a) => a.finished));
+        entering.forEach((a) => a.cancel());
+        busy = false;
+      });
     });
   </script>
 </body>
