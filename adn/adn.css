@@ -1,0 +1,591 @@
+/* Subpágina de prueba del ADN de puntos (dna.js). Usa los tokens de ../styles.css. */
+
+/* ---------- Panel con scroll ---------- */
+
+.lab {
+  position: relative;
+  border-radius: var(--r-panel);
+  background: var(--dna-bg, var(--linen));
+  overflow: clip;              /* recorta las esquinas sin romper el sticky del lienzo */
+  isolation: isolate;
+}
+
+/* El lienzo ocupa la pantalla y se queda pegado mientras el panel pasa por debajo */
+.lab__sky {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100dvh;
+  margin-bottom: -100dvh;
+  pointer-events: none;
+}
+
+.lab__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lab__bar {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: clamp(16px, 2vw, 26px);
+}
+
+.lab__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px 0 11px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.86);   /* sin desenfoque: el lienzo cambia en cada fotograma */
+  color: var(--ink);
+  font: 500 13px/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.06);
+  transition: background-color 0.35s var(--ease-out);
+}
+
+.lab__back:hover { background: var(--paper); }
+.lab__back i { font-size: 15px; }
+
+/* ---------- Acto 1: hero con la hélice ---------- */
+
+.lab__hero {
+  position: relative;
+  z-index: 1;
+  height: calc(100dvh - var(--pad-frame) * 2);
+  min-height: 520px;
+}
+
+.lab__helix {
+  position: absolute;
+  inset: 0;
+}
+
+.lab__cue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(18px, 3vh, 32px);
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 12px 0 16px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.86);   /* sin desenfoque: el lienzo cambia en cada fotograma */
+  color: var(--ink);
+  font: 500 13px/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.06);
+  animation: cue-in 1s var(--ease-out) 2.4s both;
+}
+
+.lab__cue-track {
+  position: relative;
+  width: 12px;
+  height: 18px;
+  overflow: hidden;
+}
+
+.lab__cue svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: cue-drop 2.4s var(--ease-soft) infinite;
+}
+
+.lab__cue svg + svg { animation-delay: -1.2s; }
+
+/* ---------- Acto 2: secciones de muestra sobre el fondo de puntos ---------- */
+
+.lab__field {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(140px, 28vh, 300px);
+  padding: clamp(110px, 22vh, 220px) clamp(20px, 6vw, 96px) clamp(140px, 30vh, 320px);
+}
+
+.lab__block {
+  display: grid;
+  justify-items: start;
+  gap: 18px;
+  max-width: 640px;
+}
+
+.lab__block--end {
+  justify-self: end;
+}
+
+.lab__title {
+  max-width: 12em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(36px, 5.4vw, 76px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.lab__title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+
+.lab__lede {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--stone);
+  font-size: 16.5px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.lab__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
+}
+
+.lab__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: clamp(220px, 30vh, 300px);
+  padding: clamp(18px, 1.8vw, 26px);
+  border-radius: calc(var(--r-panel) - 4px);
+  background: rgb(255 255 255 / 0.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: blur(16px) saturate(1.1);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.06), 0 24px 48px -36px rgb(13 13 13 / 0.4);
+}
+
+.lab__card--solid {
+  background: var(--paper);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.lab__card--bare {
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+.lab__card-tag { align-self: flex-start; }
+
+.lab__card-title {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.lab__card-text {
+  margin: 0;
+  color: var(--stone);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+/* ---------- Acto 3: planeta ---------- */
+
+.lab__earth {
+  position: relative;
+  z-index: 1;
+  height: calc(100dvh - var(--pad-frame) * 2);
+  min-height: 520px;
+}
+
+.lab__globe {
+  position: absolute;
+  inset: 0;
+}
+
+.lab__tail {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: end center;
+  height: 45dvh;
+  padding: 0 20px 36px;
+  color: var(--stone);
+  font-size: 13px;
+  text-align: center;
+}
+
+.lab__tail p { margin: 0; }
+
+/* ---------- Herramientas de prueba ---------- */
+
+/* Actos: en qué parte del scroll estás */
+.dna-hud {
+  position: fixed;
+  z-index: 30;
+  left: clamp(16px, 2vw, 26px);
+  bottom: clamp(16px, 2vw, 26px);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 44px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgb(247 245 243 / 0.92);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.07), 0 16px 36px -20px rgb(13 13 13 / 0.4);
+  overflow: hidden;
+}
+
+.dna-hud__step {
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--stone);
+  font: 500 13px/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: color 0.35s var(--ease-out), background-color 0.35s var(--ease-out);
+}
+
+.dna-hud__step:hover { color: var(--ink); }
+
+.dna-hud__step.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Progreso de la transición en curso */
+.dna-hud__bar {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgb(13 13 13 / 0.08);
+  overflow: hidden;
+}
+
+.dna-hud__bar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--ink);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--p, 0));
+}
+
+.dna-toggle {
+  position: fixed;
+  z-index: 31;
+  right: clamp(16px, 2vw, 26px);
+  bottom: clamp(16px, 2vw, 26px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px 0 15px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--frame);
+  color: var(--paper);
+  font: 500 14px/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 16px 36px -18px rgb(0 0 0 / 0.6);
+  transition: transform 0.5s var(--ease-out);
+}
+
+.dna-toggle:hover { transform: translateY(-1px); }
+.dna-toggle i { font-size: 17px; }
+.dna-toggle:focus-visible { outline-color: var(--ink); }
+
+.dna-panel {
+  position: fixed;
+  z-index: 31;
+  right: clamp(16px, 2vw, 26px);
+  bottom: calc(clamp(16px, 2vw, 26px) + 54px);
+  display: flex;
+  flex-direction: column;
+  width: min(356px, calc(100vw - 32px));
+  max-height: min(74dvh, 720px);
+  border-radius: 22px;
+  background: rgb(247 245 243 / 0.88);
+  -webkit-backdrop-filter: blur(22px) saturate(1.2);
+  backdrop-filter: blur(22px) saturate(1.2);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.08), 0 36px 70px -34px rgb(13 13 13 / 0.5);
+  color: var(--ink);
+  font: 400 13px/1.4 var(--font-ui);
+  letter-spacing: -0.005em;
+  transform-origin: 100% 100%;
+  animation: panel-in 0.45s var(--ease-out);
+}
+
+.dna-panel[hidden] { display: none; }
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+}
+
+.dna-panel__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 12px 18px;
+  border-bottom: 1px solid var(--hair);
+}
+
+.dna-panel__title {
+  margin: 0;
+  font: 400 19px/1.1 var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.dna-panel__note {
+  margin: 4px 0 0;
+  color: var(--stone);
+  font-size: 12px;
+}
+
+.dna-panel__note code {
+  font: 500 11.5px/1 ui-monospace, "SFMono-Regular", Consolas, monospace;
+  color: var(--ink);
+}
+
+.dna-panel__close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(13 13 13 / 0.06);
+  cursor: pointer;
+}
+
+.dna-panel__close:hover { background: rgb(13 13 13 / 0.1); }
+
+.dna-panel__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 4px 18px 8px;
+}
+
+/* Grupos plegables */
+.dna-group { border-bottom: 1px solid var(--hair); }
+.dna-group:last-child { border-bottom: 0; }
+
+.dna-group summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 0;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+
+.dna-group summary::-webkit-details-marker { display: none; }
+
+.dna-group summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  margin-right: 3px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  rotate: 45deg;
+  translate: 0 -2px;
+  transition: rotate 0.35s var(--ease-out), translate 0.35s var(--ease-out);
+}
+
+.dna-group[open] summary::after {
+  rotate: -135deg;
+  translate: 0 2px;
+}
+
+.dna-group__items {
+  display: grid;
+  gap: 12px;
+  padding: 0 0 16px;
+}
+
+.dna-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.dna-row__label { color: var(--ink); }
+
+.dna-row__value {
+  color: var(--stone);
+  font: 500 11.5px/1 ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Color: muestra redonda + valor */
+.dna-row--color .dna-row__pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dna-row input[type="color"] {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.14);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.dna-row input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.dna-row input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 50%; }
+.dna-row input[type="color"]::-moz-color-swatch { border: 0; border-radius: 50%; }
+
+/* Deslizadores: pista fina que se rellena hasta el valor */
+.dna-row input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.dna-row input[type="range"]::-webkit-slider-runnable-track {
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--ink) var(--fill, 0%), rgb(13 13 13 / 0.14) var(--fill, 0%));
+}
+
+.dna-row input[type="range"]::-moz-range-track {
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--ink) var(--fill, 0%), rgb(13 13 13 / 0.14) var(--fill, 0%));
+}
+
+.dna-row input[type="range"]::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 1.5px var(--ink);
+  -webkit-appearance: none;
+  appearance: none;
+  transition: scale 0.2s var(--ease-out);
+}
+
+.dna-row input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 1.5px var(--ink);
+}
+
+.dna-row input[type="range"]:active::-webkit-slider-thumb { scale: 1.15; }
+
+.dna-panel__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--hair);
+}
+
+.dna-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  justify-content: center;
+  height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(13 13 13 / 0.06);
+  white-space: nowrap;
+  color: var(--ink);
+  font: 500 12.5px/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background-color 0.3s var(--ease-out);
+}
+
+.dna-btn:hover { background: rgb(13 13 13 / 0.1); }
+
+.dna-btn--ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.dna-btn--ink:hover { background: #262626; }
+
+/* ---------- Pantallas estrechas ---------- */
+
+@media (max-width: 760px) {
+  .lab__cards { grid-template-columns: 1fr; }
+  .lab__block--end { justify-self: start; }
+  .lab__tag { display: none; }
+  .lab__cue { bottom: 84px; }   /* por encima de la barra de actos */
+
+  .dna-hud__step { padding: 0 11px; }
+
+  .dna-toggle span { display: none; }
+  .dna-toggle { padding: 0 13px; }
+
+  .dna-panel {
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: 62dvh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lab__cue,
+  .lab__cue svg,
+  .dna-panel { animation: none; }
+}

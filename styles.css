@@ -1,0 +1,3061 @@
+/* Cannabis Lab · Oils
+   Izquierda: lenguaje Cosmos (linen canvas, tinta #0d0d0d, peso 350, plano, sin sombras).
+   Derecha: tarjeta de producto fiel a la referencia. */
+
+:root {
+  --linen: #f7f5f3;
+  --ink: #000000;
+  --paper: #ffffff;
+  --stone: #6e6a69;
+  --pebble: #9a9796;
+  --hair: rgb(13 13 13 / 0.12);
+  --frame: #0d0d0d;
+
+  /* Escudo de púas (shield.js lee estas variables al cargar la página).
+     Colores: cualquier formato CSS. Números: de 0 a 1 (o en %). */
+  --shield-metal: #0e1431;     /* tono del metal: tiñe los reflejos de las púas */
+  --shield-shadow: #0e1431;    /* zonas sin luz: base de las púas y caras que no reflejan nada (el "negro") */
+  --shield-light: #fcfcff;     /* color de las luces que se reflejan en el metal (brillos) */
+  --shield-exposure: 1;        /* intensidad de esas luces: más de 1 aclara todo el escudo (máx. 4) */
+  --shield-veil: 0.11;         /* opacidad de las púas que miran de frente, sobre el cerebro */
+  --shield-opacity: 0.3;         /* opacidad de todo el escudo */
+
+  /* Cerebro de partículas de la tarjeta "Enfoque" (constellation.js lee estas variables al cargar
+     la página y al redimensionar). Colores: cualquier formato CSS. */
+  --brain-ink: #0e1431;          /* color principal: pliegues y contorno (la mayoría de las piezas) */
+  --brain-deep: #273169;         /* azul noche más claro: relieve de las circunvoluciones */
+  --brain-mid: #4c5a9a;          /* azul pizarra: superficie lisa */
+  --brain-soft: #9ba3c8;         /* lavanda gris: el hemisferio de detrás y el interior */
+  --brain-stone: var(--stone);   /* piedra de la página: algunas piezas de la superficie */
+  --brain-dust: var(--pebble);   /* guijarro de la página: el polvo que flota alrededor */
+  --brain-bg: #ecebe9;           /* fondo del cuadro */
+  --brain-size: 0.74;            /* tamaño del cerebro: fracción del cuadro (de 0.2 a 1) */
+  --brain-particle: 2.2px;       /* radio de cada triángulo */
+  --brain-stroke: 1px;           /* grosor del trazo de los triángulos */
+  --brain-opacity: 1;            /* opacidad de todas las piezas (de 0 a 1) */
+
+  /* ADN de puntos (dna.js, en prueba en adn/). Se lee al cargar y al redimensionar; la subpágina
+     de prueba tiene un panel para cambiarlas en vivo y copiar el resultado aquí.
+     Colores: cualquier formato CSS. */
+  --dna-strand-a: #0e1431;       /* hebra 1 de la hélice */
+  --dna-strand-b: #273169;       /* hebra 2 */
+  --dna-base-a: #4c5a9a;         /* peldaños: la mitad que sale de la hebra 1 */
+  --dna-base-b: #737fb5;         /* peldaños: la mitad que sale de la hebra 2 */
+  --dna-dust: var(--pebble);     /* puntos sueltos alrededor de la hélice */
+  --dna-land: #0e1431;           /* planeta: continentes */
+  --dna-ocean: #9ba3c8;          /* planeta: océano */
+  --dna-bg: var(--linen);        /* fondo detrás de los puntos */
+  --dna-opacity: 1;              /* opacidad de todos los puntos (de 0 a 1) */
+  --dna-field-opacity: 0.45;     /* opacidad de los puntos cuando son fondo (de 0 a 1) */
+  --dna-field-density: 0.35;     /* fracción de puntos que se quedan de fondo (de 0 a 1) */
+  --dna-depth-fade: 0.55;        /* cuánto se apaga la cara de detrás de la hélice (de 0 a 1) */
+  --dna-dot: 1.6px;              /* radio de cada punto */
+  --dna-size: 1;                 /* largo de la hélice: fracción de la diagonal de su caja */
+  --dna-turns: 3;                /* vueltas de la hélice */
+  --dna-thickness: 0.38;         /* grosor de las hebras (fracción del radio de la hélice) */
+  --dna-density: 1;              /* cantidad de puntos (1 ≈ 8.500 en escritorio, 60 % en móvil) */
+  --dna-tilt: -26deg;            /* inclinación de la diagonal (negativo: sube hacia la derecha) */
+  --dna-yaw: 24deg;              /* perspectiva: cuánto se acerca el extremo izquierdo */
+  --dna-speed: 0.08;             /* giro sobre su eje, en vueltas por segundo */
+  --dna-push: 1;                 /* fuerza con que el cursor aparta los puntos (0 = nada) */
+  --dna-smooth: 1;               /* calma de las transiciones al hacer scroll (2 = el doble de lentas) */
+  --dna-globe-size: 0.78;        /* tamaño del planeta: fracción de su caja */
+  --dna-globe-speed: 0.025;      /* giro del planeta, en vueltas por segundo */
+
+  --r-panel: clamp(18px, 1.6vw, 28px);
+  --pad-frame: clamp(8px, 1vw, 18px);
+
+  --font-display: "Questrial", "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-ui: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { background: var(--frame); }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--frame);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---------- Marco ---------- */
+
+.frame {
+  min-height: 100dvh;
+  padding: var(--pad-frame) calc(var(--pad-frame) * 1.6);
+  display: grid;
+  row-gap: var(--pad-frame);
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1.03fr;
+  height: calc(100dvh - var(--pad-frame) * 2);
+  min-height: 640px;
+  border-radius: var(--r-panel);
+  overflow: hidden;
+  background: var(--linen);
+  isolation: isolate;
+}
+
+/* ---------- Izquierda: órbita ---------- */
+
+.cosmos {
+  position: relative;
+  overflow: hidden;
+  container-type: size;
+  background: var(--linen);
+}
+
+.orbit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Arriba a la izquierda: logo y, debajo, el encabezado */
+.cosmos__head {
+  --inset: clamp(20px, 2.8vw, 44px);
+  position: absolute;
+  z-index: 2;
+  top: var(--inset);
+  left: var(--inset);
+  max-width: calc(100% - var(--inset) * 2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(18px, 2vw, 32px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1vw, 16px);
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 1.55vw, 26px);
+  letter-spacing: -0.01em;
+  border-radius: 16px;
+}
+
+.brand__mark {
+  width: clamp(38px, 3.4vw, 56px);
+  height: auto;
+  transition: rotate 1.2s var(--ease-out);
+}
+
+.brand:hover .brand__mark { rotate: 45deg; }
+
+/* Mismo lenguaje que "Oils": Questrial, tinta, tracking negativo; la segunda parte en piedra */
+.cosmos__title {
+  max-width: 12.5em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(26px, 2.5vw, 44px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+  animation: rise 1.1s var(--ease-out) 0.2s both;
+}
+
+.cosmos__title span { color: var(--stone); }
+
+.orbit-toggle {
+  position: absolute;
+  z-index: 2;
+  left: clamp(20px, 2.8vw, 44px);
+  bottom: clamp(20px, 2.8vw, 44px);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgb(13 13 13 / 0.14);
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.orbit-toggle:hover { background: var(--ink); color: var(--paper); }
+.orbit-toggle[hidden] { display: none; }
+.orbit-toggle:active { transform: scale(0.96); }
+
+/* El sello marca el centro y el tamaño del conjunto: el cerebro y su escudo de púas */
+.seal {
+  --seal-size: clamp(220px, 46cqmin, 400px);
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  width: var(--seal-size);
+  aspect-ratio: 1;
+  margin: 0;
+  translate: -50% -50%;
+  pointer-events: none;
+  animation: seal-in 1.4s var(--ease-out) both;
+}
+
+/* Escudo: shield.js dibuja la mitad trasera bajo el cerebro y la delantera encima.
+   El lienzo sobresale del sello para que quepan las púas, los lóbulos y los golpes. */
+.shield {
+  position: absolute;
+  left: -12%;
+  top: -12%;
+  width: 124%;
+  height: 124%;
+  display: block;
+}
+
+/* Persona corriendo (runner.js): vídeo con fondo transparente dentro del escudo.
+   Todas las poses del bucle caben en un círculo de radio 0,486 × alto del vídeo, con centro en
+   (55,3 %, 51 %) del cuadro: ese centro va al centro del sello y, con height: 60 %, el radio queda
+   en 0,29 del sello, dentro de la base de las púas (0,342 a 0,38).
+   El desenfoque va dentro del vídeo: un filtro CSS se recalcularía en cada fotograma. */
+.seal__runner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 60%;
+  width: auto;
+  aspect-ratio: 272 / 432;
+  translate: -55.3% -51%;
+  object-fit: contain;
+}
+
+@keyframes seal-in {
+  from { opacity: 0; scale: 0.94; }
+  to { opacity: 1; scale: 1; }
+}
+
+/* ---------- Derecha: producto ---------- */
+
+.product {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  padding: clamp(22px, 2.5vw, 44px) clamp(22px, 2.3vw, 40px) clamp(20px, 2.2vw, 38px);
+  background: var(--paper);
+  border-radius: var(--r-panel);
+}
+
+.product__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.product__kicker {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.45vw, 42px);
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.dock {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: #ecebea;
+  border-radius: 999px;
+}
+
+.dock__btn {
+  width: clamp(44px, 3.3vw, 56px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: clamp(18px, 1.35vw, 23px);
+  cursor: pointer;
+  transition: transform 0.5s var(--ease-out), background-color 0.3s var(--ease-out);
+}
+
+.dock__btn:hover { transform: translateY(-2px); background: #262626; }
+.dock__btn:active { transform: scale(0.96); }
+
+.product__stage {
+  position: relative;
+  min-height: 0;
+}
+
+.bottle {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: auto;
+  max-width: 58%;
+  object-fit: contain;
+  translate: -50% 0;
+  mix-blend-mode: multiply;
+  transform-origin: 50% 62%;
+  transition: scale 0.9s var(--ease-soft);
+  animation: rise 1.2s var(--ease-out) 0.15s both;
+}
+
+.product.is-zoomed .bottle { scale: 1.16; }
+
+.tools {
+  position: absolute;
+  top: 7%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.3vw, 22px);
+  z-index: 1;
+}
+
+.tools--left { left: 6%; }
+.tools--right { right: 4%; }
+
+.tool {
+  width: clamp(48px, 4.1vw, 72px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid rgb(13 13 13 / 0.78);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: clamp(20px, 1.7vw, 28px);
+  cursor: pointer;
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out),
+    transform 0.5s var(--ease-out);
+}
+
+.tool:hover { background: var(--ink); color: var(--paper); }
+.tool:active { transform: scale(0.95); }
+.tool[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+.drop-next {
+  position: absolute;
+  right: 3.5%;
+  top: 52%;
+  width: clamp(64px, 5.2vw, 96px);
+  aspect-ratio: 96 / 72;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  translate: 0 -50%;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.drop-next svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: var(--ink);
+  transform-origin: 62% 50%;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.drop-next i {
+  position: absolute;
+  left: 62.5%;
+  top: 50%;
+  translate: -50% -50%;
+  color: var(--paper);
+  font-size: clamp(18px, 1.5vw, 26px);
+  transition: transform 0.6s var(--ease-out);
+}
+
+.drop-next:hover svg { transform: scaleX(1.08); }
+.drop-next:hover i { transform: translateX(3px); }
+.drop-next:active { transform: scale(0.95); }
+
+.product__title {
+  margin: clamp(4px, 0.6vw, 10px) 0 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(64px, 7.4vw, 140px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  animation: rise 1.1s var(--ease-out) 0.3s both;
+}
+
+.product__copy {
+  max-width: 78ch;
+  margin: clamp(10px, 1.2vw, 20px) auto 0;
+  text-align: center;
+  text-wrap: pretty;
+  color: var(--stone);
+  font-size: clamp(14px, 0.92vw, 15.5px);
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  animation: rise 1.1s var(--ease-out) 0.42s both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Indicador de scroll ----------
+   Una pestaña del marco negro que sube por la costura entre los dos paneles, con esquinas
+   cóncavas a cada lado; dentro, una flecha que cae en bucle. */
+
+.scroll-cue {
+  --w: 68px;
+  --h: 38px;
+  --bend: 18px;
+  position: absolute;
+  z-index: 3;
+  left: calc(100% / 2.03);   /* la costura: columnas 1fr / 1.03fr */
+  bottom: 0;
+  width: var(--w);
+  height: var(--h);
+  translate: -50% 0;
+  display: grid;
+  place-items: center;
+  padding-top: 4px;
+  border-radius: 20px 20px 0 0;
+  background: var(--frame);
+  color: var(--paper);
+  animation: cue-in 1s var(--ease-out) 1.2s both;
+}
+
+.scroll-cue::before,
+.scroll-cue::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: var(--bend);
+  height: var(--bend);
+  pointer-events: none;
+}
+
+.scroll-cue::before {
+  right: 100%;
+  background: radial-gradient(circle at 0 0, transparent calc(var(--bend) - 0.5px), var(--frame) var(--bend));
+}
+
+.scroll-cue::after {
+  left: 100%;
+  background: radial-gradient(circle at 100% 0, transparent calc(var(--bend) - 0.5px), var(--frame) var(--bend));
+}
+
+.scroll-cue__track {
+  position: relative;
+  width: 14px;
+  height: 20px;
+  overflow: hidden;
+}
+
+.scroll-cue svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: cue-drop 2.4s var(--ease-soft) infinite;
+}
+
+.scroll-cue svg + svg { animation-delay: -1.2s; }
+
+.scroll-cue:hover svg { animation-duration: 1.2s; }
+.scroll-cue:hover svg + svg { animation-delay: -0.6s; }
+.scroll-cue:focus-visible { outline-color: var(--paper); outline-offset: -6px; }
+
+@keyframes cue-drop {
+  0% { translate: 0 -110%; opacity: 0; }
+  25% { opacity: 1; }
+  50% { translate: 0 0; opacity: 1; }
+  80% { opacity: 0.9; }
+  100% { translate: 0 110%; opacity: 0; }
+}
+
+@keyframes cue-in {
+  from { translate: -50% 100%; }
+  to { translate: -50% 0; }
+}
+
+/* ---------- Comparador ----------
+   Entre el hero y las guías: tabla de los 4 productos y "Ayúdame a elegir" (por ahora solo
+   visual). Comparte con Guías el panel, el aire lateral, el ancho de la rejilla y la unidad --u
+   (ver Guías). */
+
+.compare,
+.order,
+.reads,
+.aud,
+.evid,
+.faq {
+  --side: clamp(20px, 4.5vw, 120px);
+  --u: clamp(0.86px, calc((100vw - var(--pad-frame) * 3.2 - var(--side) * 2 - 16px) / 1240), 1.15px);
+  --gap: clamp(14px, 1.15vw, 26px);
+  min-width: 0;
+  scroll-margin-top: var(--pad-frame);
+  padding: clamp(72px, 7vw, 128px) var(--side);
+  border-radius: var(--r-panel);
+  background: var(--linen);
+}
+
+/* Tabla a la izquierda; el selector a la derecha, con el ancho de una columna de Guías */
+.compare__layout {
+  width: 100%;
+  max-width: 2560px;
+  margin: clamp(36px, calc(60 * var(--u)), 72px) auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(340px, calc(410 * var(--u)), 480px);
+  gap: var(--gap);
+}
+
+.compare__card,
+.quiz {
+  min-width: 0;
+  border-radius: calc(22 * var(--u));
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgb(13 13 13 / 0.045),
+    0 1px 2px rgb(13 13 13 / 0.04),
+    0 14px 34px -16px rgb(13 13 13 / 0.2);
+}
+
+.compare__card { overflow: hidden; }
+
+/* En pantallas estrechas la tabla se desplaza en horizontal y la primera columna se queda fija */
+.compare__scroll {
+  height: 100%;
+  padding: calc(10 * var(--u));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+/* La tabla llena la tarjeta: si el selector es más alto, las filas se reparten el alto */
+.compare__table {
+  width: 100%;
+  height: 100%;
+  min-width: 640px;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+.compare__table :is(th, td) {
+  padding: calc(18 * var(--u)) calc(12 * var(--u));
+  border-bottom: 1px solid var(--hair);
+  text-align: center;
+  vertical-align: middle;
+  font-size: clamp(14px, calc(15 * var(--u)), 16.5px);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  transition: background-color 0.4s var(--ease-out);
+}
+
+.compare__table thead :is(th, td) {
+  padding-top: calc(30 * var(--u));
+  padding-bottom: calc(20 * var(--u));
+  border-bottom: 0;
+}
+
+/* Etiquetas de fila: primera columna, fija al desplazar */
+.compare__table thead td:first-child,
+.compare__table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 19%;
+  background: var(--paper);
+}
+
+.compare__table tbody th {
+  padding-left: calc(18 * var(--u));
+  text-align: left;
+  color: var(--stone);
+  font-size: clamp(13px, calc(14 * var(--u)), 15px);
+  font-weight: 450;
+}
+
+.compare__table tr:last-child > * { border-bottom: 0; }
+
+/* Cada columna de producto puede resaltarse entera: esquinas redondeadas arriba y abajo */
+.compare__table thead th { border-radius: calc(16 * var(--u)) calc(16 * var(--u)) 0 0; }
+.compare__buy td { border-radius: 0 0 calc(16 * var(--u)) calc(16 * var(--u)); }
+
+.compare__buy > * {
+  padding-top: calc(22 * var(--u));
+  padding-bottom: calc(26 * var(--u));
+}
+
+/* Cabecera de producto: foto en su cuadro, número y nombre */
+.pcol {
+  display: grid;
+  justify-items: center;
+  gap: calc(12 * var(--u));
+}
+
+.pcol__pic {
+  position: relative;
+  width: clamp(76px, calc(104 * var(--u)), 128px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: calc(18 * var(--u));
+  background: #f1f0ee;
+  overflow: hidden;
+}
+
+.pcol__pic img {
+  position: absolute;
+  inset: 6%;
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  rotate: -16deg;
+  filter: drop-shadow(0 6px 8px rgb(13 13 13 / 0.14));
+  transition:
+    rotate 0.9s var(--ease-out),
+    scale 0.9s var(--ease-out),
+    translate 0.9s var(--ease-out);
+}
+
+.pcol__n {
+  position: absolute;
+  top: calc(8 * var(--u));
+  left: calc(8 * var(--u));
+  min-width: max(20px, calc(22 * var(--u)));
+  height: max(20px, calc(22 * var(--u)));
+  display: grid;
+  place-items: center;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 2px 8px -3px rgb(13 13 13 / 0.14);
+  font: 500 max(11px, calc(11.5 * var(--u)))/1 var(--font-ui);
+  font-variant-numeric: tabular-nums;
+}
+
+.pcol__name {
+  font-family: var(--font-display);
+  font-size: clamp(16px, calc(20 * var(--u)), 23px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.price {
+  font-weight: 600;
+  font-size: clamp(15px, calc(16.5 * var(--u)), 18px);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.compare__table small {
+  color: var(--stone);
+  font-size: max(11.5px, calc(12 * var(--u)));
+  white-space: nowrap;
+}
+
+/* "Añadir": píldora negra con el + en su propio círculo (como "Leer guía completa") */
+.add {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(10 * var(--u));
+  height: max(40px, calc(44 * var(--u)));
+  padding: 0 max(5px, calc(5 * var(--u))) 0 max(15px, calc(17 * var(--u)));
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 500 max(13px, calc(14 * var(--u)))/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.35s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.add__icon {
+  width: max(30px, calc(34 * var(--u)));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.14);
+  font-size: max(14px, calc(15 * var(--u)));
+  transition: rotate 0.6s var(--ease-out), background-color 0.35s var(--ease-out);
+}
+
+.add:hover { background: #262626; }
+.add:hover .add__icon { rotate: 90deg; background: rgb(255 255 255 / 0.22); }
+.add:active { transform: scale(0.97); }
+
+/* Columna bajo el puntero: se tiñe entera y su producto se endereza */
+@media (hover: hover) {
+  .compare__table:has(tr > :nth-child(2):hover) tr > :nth-child(2),
+  .compare__table:has(tr > :nth-child(3):hover) tr > :nth-child(3),
+  .compare__table:has(tr > :nth-child(4):hover) tr > :nth-child(4),
+  .compare__table:has(tr > :nth-child(5):hover) tr > :nth-child(5) { background: #f7f6f4; }
+
+  .compare__table:has(tr > :nth-child(2):hover) thead th:nth-child(2) .pcol__pic img,
+  .compare__table:has(tr > :nth-child(3):hover) thead th:nth-child(3) .pcol__pic img,
+  .compare__table:has(tr > :nth-child(4):hover) thead th:nth-child(4) .pcol__pic img,
+  .compare__table:has(tr > :nth-child(5):hover) thead th:nth-child(5) .pcol__pic img {
+    rotate: -4deg;
+    scale: 1.07;
+    translate: 0 -2px;
+  }
+}
+
+/* ----- Ayúdame a elegir ----- */
+
+.quiz {
+  display: flex;
+  flex-direction: column;
+  gap: calc(22 * var(--u));
+  margin: 0;
+  padding: calc(32 * var(--u)) calc(30 * var(--u)) calc(28 * var(--u));
+}
+
+.quiz__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(26px, calc(32 * var(--u)), 38px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.quiz__note {
+  margin: calc(-12 * var(--u)) 0 0;
+  color: var(--stone);
+  font-size: clamp(13.5px, calc(14.5 * var(--u)), 15.5px);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.quiz__q {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.quiz__q legend {
+  display: flex;
+  align-items: baseline;
+  gap: calc(10 * var(--u));
+  margin-bottom: calc(12 * var(--u));
+  padding: 0;
+  font-size: clamp(14px, calc(15 * var(--u)), 16px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.quiz__n {
+  color: var(--pebble);
+  font-size: max(11px, calc(11.5 * var(--u)));
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.quiz__opts {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  gap: calc(8 * var(--u));
+}
+
+/* Opción: un radio invisible encima de su cuadro; marcada, el cuadro pasa a tinta */
+.opt {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.opt input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.opt span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: max(44px, calc(48 * var(--u)));
+  padding: 6px calc(10 * var(--u));
+  border-radius: calc(14 * var(--u));
+  background: #f4f3f1;
+  box-shadow: inset 0 0 0 1px rgb(13 13 13 / 0.06);
+  text-align: center;
+  font-size: clamp(13.5px, calc(14.5 * var(--u)), 15.5px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    scale 0.5s var(--ease-out);
+}
+
+.opt:hover span { background: #ecebe9; }
+.opt:active span { scale: 0.97; }
+
+.opt input:checked + span {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: none;
+  animation: opt-pick 0.55s var(--ease-out);
+}
+
+.opt input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+@keyframes opt-pick {
+  0% { scale: 0.94; }
+  60% { scale: 1.02; }
+  100% { scale: 1; }
+}
+
+/* El botón y el aviso bajan al pie si la tarjeta es más alta que su contenido */
+.quiz__go {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: max(50px, calc(56 * var(--u)));
+  padding: 0 max(6px, calc(6 * var(--u))) 0 calc(24 * var(--u));
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 500 clamp(14px, calc(15 * var(--u)), 16px)/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background-color 0.35s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.quiz__go-icon {
+  width: max(38px, calc(44 * var(--u)));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.14);
+  font-size: max(16px, calc(17 * var(--u)));
+  transition: translate 0.5s var(--ease-out), background-color 0.35s var(--ease-out);
+}
+
+.quiz__go:hover { background: #262626; }
+.quiz__go:hover .quiz__go-icon { translate: 4px 0; background: rgb(255 255 255 / 0.22); }
+.quiz__go:active { transform: scale(0.985); }
+
+.quiz__legal {
+  display: flex;
+  gap: 8px;
+  margin: calc(-6 * var(--u)) 0 0;
+  color: var(--stone);
+  font-size: clamp(12.5px, calc(13 * var(--u)), 14px);
+  line-height: 1.5;
+}
+
+.quiz__legal i {
+  flex: none;
+  margin-top: 0.15em;
+  font-size: 1.15em;
+}
+
+/* Antes de entrar con el scroll (compare.js quita la clase al animar la entrada) */
+.compare.is-armed .compare__head > *,
+.compare.is-armed :is(.compare__card, .quiz) { opacity: 0; }
+
+/* ---------- Cómo funciona tu pedido ----------
+   Encabezado del diseño de Stitch y 4 tarjetas de paso como las de la referencia (doble bisel:
+   bandeja con un panel dentro), adaptadas a la paleta de la página: el objeto 3D negro de cada
+   paso asoma por encima de su tarjeta, flota despacio y sigue al puntero; debajo, el título y una
+   descripción breve. Comparte panel, ancho y --u con el resto de secciones. */
+
+/* El título va en una línea si cabe, como en el diseño */
+.order .order__title { max-width: 20em; }
+
+/* Encabezado compacto y alineado con la fila de tarjetas; en pantallas anchas, título a la
+   izquierda y el resto a la derecha */
+.order .order__head {
+  --row-w: calc(2 * var(--cw) + var(--cgap));
+  width: min(100%, var(--row-w));
+}
+
+.order__aside {
+  display: grid;
+  justify-items: start;
+  gap: clamp(12px, calc(16 * var(--u)), 20px);
+}
+
+@container order (min-width: 1180px) {
+  .order .order__head {
+    --row-w: calc(4 * var(--cw) + 3 * var(--cgap));
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    column-gap: clamp(40px, calc(80 * var(--u)), 120px);
+    align-items: end;
+  }
+
+  .order__head > :is(.chip, .order__title) { grid-column: 1; }
+
+  .order__aside {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+}
+
+/* Chip con punto delante (etiqueta de sección) */
+.chip--dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.order__proof {
+  margin: calc(2 * var(--u)) 0 0;
+  color: var(--stone);
+  font-size: clamp(12.5px, calc(13 * var(--u)), 14px);
+  line-height: 1.5;
+}
+
+.order__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order__badges li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: max(30px, calc(32 * var(--u)));
+  padding: 4px calc(13 * var(--u)) 4px calc(11 * var(--u));
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 2px 8px -3px rgb(13 13 13 / 0.14);
+  font-size: clamp(12.5px, calc(13 * var(--u)), 14px);
+  letter-spacing: -0.01em;
+}
+
+.order__badges i { font-size: 1.2em; }
+
+/* ----- Tarjetas de paso ----- */
+
+/* Tarjetas del tamaño de la referencia (316 × 381 px, rectángulo vertical), sin estirarse:
+   4 en fila si caben (consulta del contenedor .order), 2 × 2 si no y 1 en el móvil. Si sobra
+   pantalla, se quedan centradas. Arriba y entre filas, hueco para el objeto que asoma (--pop). */
+.order {
+  --cw: clamp(280px, calc(316 * var(--u)), 340px);
+  --cgap: clamp(20px, calc(28 * var(--u)), 34px);
+  container: order / inline-size;
+}
+
+.order__grid {
+  --pop: calc(var(--cw) * 0.15);
+  width: 100%;
+  max-width: 2560px;
+  margin: calc(var(--pop) + clamp(48px, calc(80 * var(--u)), 96px)) auto 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, min(var(--cw), (100% - var(--cgap)) / 2));
+  justify-content: center;
+  gap: calc(var(--pop) + var(--cgap)) var(--cgap);
+}
+
+@container order (min-width: 1180px) {
+  .order__grid { grid-template-columns: repeat(4, min(var(--cw), (100% - 3 * var(--cgap)) / 4)); }
+}
+
+/* Doble bisel: bandeja de lino con la luz arriba y, dentro, un panel blanco con el texto */
+.ostep {
+  --r: calc(30 * var(--u));
+  --bezel: calc(8 * var(--u));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  aspect-ratio: 316 / 381;
+  padding: var(--bezel);
+  border-radius: var(--r);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f0ed 46%, #ecebe8 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 0 0 1px rgb(13 13 13 / 0.05),
+    0 2px 4px rgb(13 13 13 / 0.04),
+    0 24px 48px -26px rgb(13 13 13 / 0.28);
+  transition: translate 0.7s var(--ease-out), box-shadow 0.7s var(--ease-out);
+}
+
+/* Objeto 3D: centrado en la mitad de arriba de la tarjeta, con aire por debajo y asomando un poco
+   por encima del borde, como en la referencia (medidas en % de esa zona); sigue al puntero
+   (order.js) */
+.ostep__obj {
+  position: relative;
+  z-index: 1;
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  pointer-events: none;
+}
+
+.ostep__obj img {
+  position: absolute;
+  left: 50%;
+  bottom: var(--obj-y, 38%);
+  width: var(--obj-w, 52%);
+  height: var(--obj-h, 84%);
+  object-fit: contain;
+  object-position: 50% 100%;
+  translate: -50% 0;
+  transform:
+    translate3d(calc(var(--mx, 0) * 10px), calc(var(--my, 0) * 6px - var(--lift, 0px)), 0)
+    rotate(calc(var(--mx, 0) * 4deg + var(--tilt, 0deg)));
+  filter: drop-shadow(0 16px 14px rgb(13 13 13 / 0.15)) drop-shadow(0 3px 4px rgb(13 13 13 / 0.08));
+  transition: transform 0.9s var(--ease-out);
+  animation: obj-float 6.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: var(--float-delay, 0s);
+}
+
+/* Cada objeto con su tamaño (alto y ancho máximos) y su base, para que pesen lo mismo a la vista
+   y compartan el centro: un 74 % por encima del fondo de la zona */
+.ostep--pick { --obj-h: 80%; --obj-w: 54%; --obj-y: 34%; --float-delay: -0.8s; }
+.ostep--pin { --obj-h: 92%; --obj-w: 54%; --obj-y: 28%; --float-delay: -2.4s; }
+.ostep--box { --obj-h: 84%; --obj-w: 58%; --obj-y: 32%; --float-delay: -4s; }
+.ostep--pay { --obj-h: 48%; --obj-w: 66%; --obj-y: 50%; --float-delay: -5.6s; }
+
+@keyframes obj-float {
+  0%,
+  100% { translate: -50% 0; }
+  50% { translate: -50% -7px; }
+}
+
+.ostep__panel {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: calc(10 * var(--u));
+  flex: none;
+  min-height: 47%;   /* todos los paneles igual de altos, como en la referencia */
+  padding: calc(30 * var(--u)) calc(20 * var(--u)) calc(32 * var(--u));
+  border-radius: calc(var(--r) - var(--bezel));
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgb(13 13 13 / 0.05),
+    0 1px 2px rgb(13 13 13 / 0.04),
+    0 10px 24px -16px rgb(13 13 13 / 0.18);
+  text-align: center;
+}
+
+.ostep__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(20px, calc(24 * var(--u)), 26px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.ostep__text {
+  max-width: 30ch;
+  margin: 0;
+  color: var(--stone);
+  font-size: clamp(13px, calc(14 * var(--u)), 15px);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.ostep__text a {
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}
+
+/* Hover: la tarjeta sube y su objeto se eleva un poco más */
+@media (hover: hover) {
+  .ostep:hover {
+    translate: 0 -6px;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      0 0 0 1px rgb(13 13 13 / 0.06),
+      0 4px 8px rgb(13 13 13 / 0.05),
+      0 36px 60px -28px rgb(13 13 13 / 0.34);
+  }
+
+  .ostep:hover .ostep__obj img { --lift: 12px; --tilt: -3deg; }
+}
+
+/* ----- Zonas de envío ----- */
+
+/* Una banda del ancho de la fila de tarjetas: intro, UE y fuera de la UE. En tres columnas
+   cuando las tarjetas van en fila; apiladas cuando van en 2 × 2 o en el móvil */
+.ship {
+  --row-w: calc(2 * var(--cw) + var(--cgap));
+  width: min(100%, var(--row-w));
+  margin: clamp(40px, calc(64 * var(--u)), 80px) auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-radius: calc(30 * var(--u));
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgb(13 13 13 / 0.045),
+    0 1px 2px rgb(13 13 13 / 0.04),
+    0 24px 48px -30px rgb(13 13 13 / 0.25);
+}
+
+.ship__sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.ship__intro,
+.ship__zone {
+  min-width: 0;
+  padding: clamp(22px, calc(30 * var(--u)), 36px) clamp(20px, calc(30 * var(--u)), 36px);
+}
+
+.ship__zone { border-top: 1px solid var(--hair); }
+
+@container order (min-width: 1180px) {
+  .ship {
+    --row-w: calc(4 * var(--cw) + 3 * var(--cgap));
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.45fr) minmax(0, 0.9fr);
+  }
+
+  .ship__zone {
+    border-top: 0;
+    border-left: 1px solid var(--hair);
+  }
+}
+
+.ship__kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--stone);
+  font-size: max(11px, calc(12 * var(--u)));
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ship__kicker i {
+  color: var(--ink);
+  font-size: 1.35em;
+}
+
+.ship__title {
+  margin: calc(12 * var(--u)) 0 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(24px, calc(30 * var(--u)), 34px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.ship__text {
+  max-width: 36ch;
+  margin: calc(10 * var(--u)) 0 0;
+  color: var(--stone);
+  font-size: clamp(13.5px, calc(14.5 * var(--u)), 15.5px);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+/* Enlace con subrayado que se dibuja al pasar por encima (como en Perfiles) */
+.ship__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: calc(14 * var(--u));
+  padding-bottom: 3px;
+  color: var(--ink);
+  font: 500 clamp(13.5px, calc(14 * var(--u)), 15px)/1.2 var(--font-ui);
+  text-decoration: none;
+  background: linear-gradient(currentColor 0 0) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.5s var(--ease-out);
+}
+
+.ship__more i { transition: translate 0.5s var(--ease-out); }
+.ship__more:hover { background-size: 100% 1px; }
+.ship__more:hover i { translate: 3px 0; }
+
+.ship__label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin: 0;
+  color: var(--stone);
+  font-size: clamp(13px, calc(14 * var(--u)), 15px);
+  line-height: 1.45;
+}
+
+.ship__tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 10.5px/1 var(--font-ui);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ship__tag--out {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px rgb(13 13 13 / 0.22);
+}
+
+/* Fichas de país: bandera + código; el nombre, en el título emergente y para el lector */
+.ship__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: clamp(14px, calc(18 * var(--u)), 22px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ship__list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 12px 0 10px;
+  border-radius: 999px;
+  background: #f4f3f1;
+  box-shadow: inset 0 0 0 1px rgb(13 13 13 / 0.05);
+  font: 500 12.5px/1 var(--font-ui);
+  letter-spacing: 0.05em;
+  transition:
+    background-color 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out),
+    translate 0.45s var(--ease-out);
+}
+
+.ship__list li:hover {
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.06), 0 8px 16px -10px rgb(13 13 13 / 0.3);
+  translate: 0 -2px;
+}
+
+.ship__list .ship__rest {
+  font-weight: 450;
+  letter-spacing: -0.01em;
+}
+
+.ship__rest i { font-size: 16px; }
+
+.flag {
+  flex: none;
+  width: 18px;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 2.5px;
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.08);
+}
+
+/* Antes de entrar con el scroll (order.js quita la clase al animar la entrada) */
+.order.is-armed .order__head > *,
+.order.is-armed :is(.ostep, .ship) { opacity: 0; }
+
+/* ---------- Guías ----------
+   La rejilla ocupa todo el ancho del panel (con el aire lateral justo). Las compactas muestran
+   la pregunta y un resumen corto; la desplegada, la imagen y la respuesta completa (60–120
+   palabras), que siempre cabe: la imagen cede el sitio que necesite el texto.
+   --u es "1 px de la referencia" (hub de la tienda, 1240 px): escala letra y espacios con el
+   ancho de la rejilla y se detiene en 1,15 para que el texto no se agigante en pantallas grandes.
+     Desde 1100 px: 4 columnas · desplegada 2 × 3, como la referencia
+     641–1099: 2 columnas · desplegada a lo ancho
+     Hasta 640: 1 columna
+   Con 4 columnas la desplegada acompaña al scroll (sticky) si la rejilla es más alta que la
+   ventana, y nunca es más alta que ella: al desplegar una, su texto siempre se ve. */
+
+/* Panel, aire lateral y --u: compartidos con el Comparador */
+.reads { --stick: clamp(12px, 2.5svh, 32px); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 500 13px/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 2px 8px -3px rgb(13 13 13 / 0.14);
+}
+
+/* Texto de muestra: sustituir por el definitivo */
+.draft {
+  text-decoration: underline dashed rgb(13 13 13 / 0.3);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  text-decoration-skip-ink: none;
+}
+
+/* Encabezado alineado a la izquierda con la rejilla (también el del Comparador) */
+.compare__head,
+.order__head,
+.reads__head,
+.aud__head,
+.faq__head {
+  width: 100%;
+  max-width: 2560px;
+  margin: 0 auto;
+  display: grid;
+  justify-items: start;
+  gap: clamp(14px, calc(18 * var(--u)), 22px);
+}
+
+.compare__title,
+.order__title,
+.reads__title,
+.aud__title,
+.faq__title {
+  max-width: 11.5em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(36px, calc(60 * var(--u)), 76px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.compare__title em,
+.order__title em,
+.reads__title em,
+.aud__title em,
+.faq__title em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+
+.compare__lede,
+.order__lede,
+.reads__lede,
+.aud__lede {
+  max-width: 52ch;
+  margin: clamp(2px, calc(6 * var(--u)), 8px) 0 0;
+  color: var(--stone);
+  font-size: max(15px, calc(16.5 * var(--u)));
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+/* Palabras partidas (reads.js) para revelarlas desde una máscara */
+.w {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.06em 0.02em 0.14em;
+  margin: -0.06em -0.02em -0.14em;
+  vertical-align: top;
+}
+
+.w__i { display: inline-block; }
+
+/* La desplegada ocupa las columnas 1-2; las compactas y "Ver todas" llenan el resto en el orden
+   del HTML. Las filas crecen con el texto de sus tarjetas. */
+.reads__grid {
+  position: relative;
+  width: 100%;
+  max-width: 2560px;
+  margin: clamp(36px, calc(60 * var(--u)), 72px) auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+/* Tarjeta: marco blanco. La desplegada encaja su imagen dentro con un borde de 6 */
+.read {
+  --r: calc(22 * var(--u));
+  --pad: calc(6 * var(--u));
+  position: relative;
+  scroll-margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: calc(270 * var(--u));
+  border-radius: var(--r);
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgb(13 13 13 / 0.045),
+    0 1px 2px rgb(13 13 13 / 0.04),
+    0 14px 34px -16px rgb(13 13 13 / 0.2);
+  transition:
+    translate 0.6s var(--ease-out),
+    scale 0.4s var(--ease-out),
+    box-shadow 0.6s var(--ease-out);
+}
+
+/* Compacta: 26 de aire; etiqueta y tiempo arriba, pregunta, respuesta (3 líneas) y revisión */
+.read__body {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(14 * var(--u));
+  padding: calc(26 * var(--u));
+}
+
+.read__top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.read__tag {
+  height: max(22px, calc(24 * var(--u)));
+  padding: 0 calc(11 * var(--u));
+  background: #efeeec;
+  box-shadow: none;
+  font-size: max(11.5px, calc(12.5 * var(--u)));
+}
+
+.read__time {
+  color: var(--stone);
+  font-size: max(11.5px, calc(12.5 * var(--u)));
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.read__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: max(17px, calc(24 * var(--u)));
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.read__title:focus { outline: none; }
+
+.read__link {
+  color: inherit;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+/* Resumen de la compacta: de qué trata la guía, en una o dos frases */
+.read__lede {
+  margin: 0;
+  color: var(--stone);
+  font-size: clamp(14px, calc(14.5 * var(--u)), 15.5px);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+/* Respuesta directa (60–120 palabras): solo en la desplegada, siempre entera */
+.read__text {
+  margin: 0;
+  color: var(--stone);
+  font-size: clamp(14px, calc(14.5 * var(--u)), 15.5px);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.read__meta {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.read__by {
+  margin: 0;
+  padding-right: calc(52 * var(--u));
+  color: var(--stone);
+  font-size: max(11.5px, calc(12.5 * var(--u)));
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+/* Flecha de la compacta: al pasar por encima se rellena y gira hacia la derecha */
+.read__go {
+  position: absolute;
+  z-index: 1;
+  right: calc(22 * var(--u));
+  bottom: calc(22 * var(--u));
+  width: max(34px, calc(40 * var(--u)));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hair);
+  border-radius: 50%;
+  color: var(--ink);
+  font-size: max(15px, calc(17 * var(--u)));
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    rotate 0.6s var(--ease-out),
+    scale 0.5s var(--ease-out);
+}
+
+/* "Leer guía completa": píldora negra con la flecha en su propio círculo */
+.read__more {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(12 * var(--u));
+  height: max(42px, calc(48 * var(--u)));
+  padding: 0 max(5px, calc(6 * var(--u))) 0 max(16px, calc(20 * var(--u)));
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 500 max(13.5px, calc(14.5 * var(--u)))/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.35s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.read__more-icon {
+  width: max(32px, calc(36 * var(--u)));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.14);
+  font-size: max(15px, calc(16 * var(--u)));
+  transition:
+    translate 0.5s var(--ease-out),
+    scale 0.5s var(--ease-out),
+    background-color 0.35s var(--ease-out);
+}
+
+.read__more:hover { background: #262626; }
+.read__more:hover .read__more-icon { translate: 2px -2px; scale: 1.06; background: rgb(255 255 255 / 0.22); }
+.read__more:active { transform: scale(0.98); }
+.read__more:focus-visible { outline-offset: 3px; }
+
+/* Botón que cubre la compacta y la despliega (lo crea reads.js); también pinta una luz cálida
+   que sigue al puntero */
+.read__open {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r);
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgb(244 240 235 / 0.85), transparent 62%);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.read__open:focus-visible { opacity: 1; outline-offset: 4px; }
+
+/* Sin JS: el título enlaza a la guía y cubre toda la tarjeta */
+.reads:not(.is-ready) .read__link::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: var(--r);
+}
+
+/* Qué se ve en cada estado: las compactas, solo texto; la desplegada, imagen y enlace a la guía */
+.read__media { display: none; }
+.read:not(.is-featured) :is(.read__text, .read__more) { display: none; }
+.read.is-featured :is(.read__lede, .read__go, .read__open) { display: none; }
+
+/* ----- Desplegada ----- */
+
+/* Hueco de la desplegada en la rejilla. La tarjeta lo llena, pero sin pasar del alto de la
+   ventana: si las compactas suman más, se queda fija mientras se recorren (el sticky no sale del
+   hueco). La imagen cede el sitio que necesite el texto. */
+.reads__stage {
+  grid-column: 1 / span 2;
+  grid-row: 1 / span 3;
+  min-width: 0;
+}
+
+.read.is-featured {
+  position: sticky;
+  top: var(--stick);
+  height: 100%;
+  max-height: calc(100svh - var(--stick) * 2);
+  min-height: min-content;
+  padding: var(--pad);
+}
+
+.read.is-featured .read__media {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  min-height: clamp(240px, 34svh, 440px);
+  overflow: hidden;
+  border-radius: calc(var(--r) - var(--pad));
+  background: #ecebe9;
+  isolation: isolate;
+}
+
+/* La imagen y su copia desenfocada se acercan juntas (hover, entrada, despliegue) */
+.read__pic {
+  position: absolute;
+  inset: 0;
+  transition: scale 1.4s var(--ease-out);
+}
+
+.read__pic img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+}
+
+/* Borde inferior que se funde con la tarjeta, donde va el texto: la copia desenfocada aparece
+   hacia abajo y encima un velo blanco termina el fundido. Paradas en px de la referencia, para
+   que el fundido llegue siempre justo hasta el texto. */
+.read__soft,
+.fx-soft {
+  filter: blur(calc(20 * var(--u))) saturate(1.05);
+  scale: 1.14;
+  -webkit-mask-image: linear-gradient(180deg, transparent max(26%, 100% - 320 * var(--u)), #000 max(54%, 100% - 175 * var(--u)));
+  mask-image: linear-gradient(180deg, transparent max(26%, 100% - 320 * var(--u)), #000 max(54%, 100% - 175 * var(--u)));
+}
+
+.read__media::after,
+.fx-fade {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgb(255 255 255 / 0) max(28%, 100% - 300 * var(--u)),
+    rgb(255 255 255 / 0.62) max(54%, 100% - 175 * var(--u)),
+    rgb(255 255 255 / 0.93) max(72%, 100% - 112 * var(--u)),
+    var(--paper) max(88%, 100% - 46 * var(--u)));
+}
+
+/* Cerebro de partículas (constellation.js): el lienzo va encima del velo, con su borde inferior
+   desvanecido, y se queda en la parte alta para que el cerebro no caiga bajo el texto */
+.read__media--live,
+.fx-media.fx-media--live { background: var(--brain-bg); }
+.read__media--live .read__pic { z-index: 2; }
+
+.constellation {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: calc(100% - 90 * var(--u));
+  display: block;
+  -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 97%);
+  mask-image: linear-gradient(180deg, #000 62%, transparent 97%);
+}
+
+/* El texto sube sobre el fundido */
+.read.is-featured .read__body {
+  z-index: 3;
+  flex: none;
+  gap: calc(18 * var(--u));
+  margin-top: calc(-120 * var(--u));
+  padding: 0 calc(34 * var(--u)) calc(30 * var(--u));
+}
+
+.read.is-featured .read__tag {
+  height: max(24px, calc(28 * var(--u)));
+  padding: 0 calc(13 * var(--u));
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 2px 8px -3px rgb(13 13 13 / 0.14);
+  font-size: max(12px, calc(13 * var(--u)));
+}
+
+.read.is-featured .read__time { font-size: max(12px, calc(13 * var(--u))); }
+
+.read.is-featured .read__title {
+  max-width: 12em;
+  margin-top: calc(6 * var(--u));
+  font-size: clamp(30px, calc(48 * var(--u)), 62px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.read.is-featured .read__text {
+  max-width: 62ch;
+  font-size: clamp(15px, calc(16.5 * var(--u)), 18px);
+  line-height: 1.6;
+}
+
+.read.is-featured .read__meta { margin-top: calc(8 * var(--u)); }
+.read.is-featured .read__by { padding-right: 0; font-size: max(12px, calc(13 * var(--u))); }
+
+/* ----- Ver todas las guías ----- */
+
+.reads__all {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(14 * var(--u));
+  min-height: calc(270 * var(--u));
+  padding: calc(26 * var(--u));
+  border-radius: calc(22 * var(--u));
+  background: var(--frame);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: max(18px, calc(22 * var(--u)));
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: translate 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out), scale 0.4s var(--ease-out);
+}
+
+/* Luz que sigue al puntero */
+.reads__all::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / 0.13), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+}
+
+.reads__all i {
+  font-size: max(19px, calc(22 * var(--u)));
+  transition: translate 0.6s var(--ease-out);
+}
+
+.reads__all:focus-visible { outline-offset: 4px; }
+.reads__all:active { scale: 0.985; }
+
+/* Hover: la compacta se eleva y su flecha se rellena; la desplegada acerca su imagen */
+@media (hover: hover) {
+  .reads__grid:not(.is-swapping) .read:not(.is-featured):hover {
+    translate: 0 -4px;
+    box-shadow:
+      0 0 0 1px rgb(13 13 13 / 0.05),
+      0 2px 4px rgb(13 13 13 / 0.05),
+      0 28px 48px -20px rgb(13 13 13 / 0.3);
+  }
+
+  .reads__grid:not(.is-swapping) .read:not(.is-featured):hover .read__go {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+    rotate: 45deg;
+  }
+
+  .reads__grid:not(.is-swapping) .read:not(.is-featured):hover .read__open { opacity: 1; }
+  .reads__grid:not(.is-swapping) .read.is-featured:hover .read__pic { scale: 1.035; }
+
+  .reads__all:hover {
+    translate: 0 -4px;
+    box-shadow: 0 28px 48px -22px rgb(13 13 13 / 0.45);
+  }
+
+  .reads__all:hover::before { opacity: 1; }
+  .reads__all:hover i { translate: 6px 0; }
+}
+
+.read:not(.is-featured):active { scale: 0.985; }
+
+/* Antes de entrar con el scroll (reads.js quita la clase al animar la entrada) */
+.reads.is-armed .reads__head > *,
+.reads.is-armed :is(.read, .reads__all) { opacity: 0; }
+
+/* Despliegue en curso (reads.js) */
+.reads__grid.is-swapping :is(.read, .reads__all) { pointer-events: none; }
+.read.is-hidden { visibility: hidden; transition: none; }
+
+.read.is-revealing {
+  z-index: 2;
+  background: transparent;
+  box-shadow: none;
+  transition: none;
+}
+
+.read:is(.is-hidden, .is-revealing) .read__pic { transition: none; }
+.read.is-revealing .read__media { visibility: hidden; }
+
+/* Capa de fantasmas: marco, imagen y texto de las dos tarjetas que se cruzan */
+.reads__fx {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.fx-frame,
+.fx-media,
+.fx-text {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+}
+
+.fx-frame {
+  border-radius: calc(22 * var(--u));
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgb(13 13 13 / 0.045),
+    0 1px 2px rgb(13 13 13 / 0.04),
+    0 14px 34px -16px rgb(13 13 13 / 0.2);
+}
+
+.fx-media {
+  overflow: hidden;
+  border-radius: calc(16 * var(--u));
+  background: #ecebe9;
+  isolation: isolate;
+}
+
+.fx-pic {
+  position: absolute;
+  inset: 0;
+}
+
+.fx-media--live .fx-pic { z-index: 2; }
+
+.fx-pic img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Destello que cruza la imagen mientras se despliega */
+.fx-sheen {
+  position: absolute;
+  z-index: 3;
+  inset: -10% -50%;
+  background: linear-gradient(105deg, transparent 42%, rgb(255 255 255 / 0.55) 50%, transparent 58%);
+  mix-blend-mode: soft-light;
+  translate: -70% 0;
+}
+
+.reads__fx .fx-text.read {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-height: 0;
+  max-height: none;
+  background: transparent;
+  box-shadow: none;
+  transition: none;
+}
+
+.fx-text .read__media { visibility: hidden; }
+
+/* ---------- A quién va dirigido ----------
+   Diseño de Stitch con el lenguaje de la página: encabezado centrado y un carrusel de perfiles con
+   las tarjetas apiladas, como la referencia: la actual delante y la anterior y la siguiente
+   asomando detrás (--peek), más pequeñas y lavadas. Radios grandes, también de la referencia.
+   audience.js da a cada tarjeta su sitio (data-pos: 0 delante, -1 y 1 detrás, far escondida) y
+   anima el giro. Comparte panel, ancho y --u con el resto de secciones. */
+
+.aud .aud__head {
+  justify-items: center;
+  text-align: center;
+}
+
+.aud .aud__title { max-width: none; }
+.aud .aud__lede { max-width: 62ch; }
+
+.aud__specs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--stone);
+  font-size: max(11px, calc(12 * var(--u)));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.aud__specs li + li::before {
+  content: "•";
+  margin-right: 14px;
+  color: var(--pebble);
+}
+
+/* ----- Carrusel ----- */
+
+.aud__carousel {
+  --peek: clamp(28px, calc(96 * var(--u)), 120px);
+  --cw: min(calc(980 * var(--u)), 100% - var(--peek) * 2 - 48px);
+  position: relative;
+  width: 100%;
+  max-width: 2560px;
+  margin: clamp(48px, calc(80 * var(--u)), 96px) auto 0;
+}
+
+/* Las tarjetas comparten celda: el mazo mide lo que la más alta */
+.aud__deck {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  touch-action: pan-y;
+}
+
+.acard {
+  grid-area: 1 / 1;
+  position: relative;
+  z-index: 1;
+  width: var(--cw);
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+  align-items: center;
+  gap: calc(40 * var(--u));
+  padding: calc(30 * var(--u));
+  border-radius: calc(44 * var(--u));
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgb(13 13 13 / 0.045),
+    0 2px 4px rgb(13 13 13 / 0.04),
+    0 34px 64px -34px rgb(13 13 13 / 0.3);
+  transform-origin: 50% 50%;
+}
+
+/* Velo que lava las tarjetas de detrás */
+.acard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--linen);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.acard[data-pos="0"] { z-index: 3; }
+
+.acard[data-pos="-1"],
+.acard[data-pos="1"] {
+  z-index: 2;
+  cursor: pointer;
+}
+
+.acard[data-pos="-1"] { transform: translateX(calc(-7% - var(--peek))) scale(0.86); }
+.acard[data-pos="1"] { transform: translateX(calc(7% + var(--peek))) scale(0.86); }
+
+.acard[data-pos="-1"]::after,
+.acard[data-pos="1"]::after { opacity: 0.62; }
+
+.acard[data-pos="far"] {
+  transform: scale(0.72);
+  opacity: 0;
+}
+
+/* Sin JS: solo la primera */
+.aud__deck:not(.is-ready) .acard:not(.is-active) { display: none; }
+
+/* Foto en blanco y negro dentro de su cuadro de esquinas muy redondeadas */
+.acard__media {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: calc(36 * var(--u));
+  background: var(--ink);
+  isolation: isolate;
+}
+
+.acard__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+  transition: scale 1.4s var(--ease-out), filter 0.9s var(--ease-out);
+}
+
+.acard__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.16),
+    inset 0 -70px 70px -50px rgb(13 13 13 / 0.45);
+  pointer-events: none;
+}
+
+.acard__fig {
+  position: absolute;
+  z-index: 1;
+  left: calc(16 * var(--u));
+  bottom: calc(16 * var(--u));
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgb(13 13 13 / 0.78);
+  color: var(--paper);
+  font: 500 max(10.5px, calc(11.5 * var(--u)))/1.2 var(--font-ui);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.acard__body {
+  display: flex;
+  flex-direction: column;
+  gap: calc(16 * var(--u));
+  min-width: 0;
+}
+
+.acard__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.acard__area {
+  margin: 0;
+  color: var(--stone);
+  font-size: max(11px, calc(12 * var(--u)));
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.acard__ref {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: max(11.5px, calc(12.5 * var(--u)));
+  white-space: nowrap;
+}
+
+.acard__ref i { font-size: 1.3em; }
+
+.acard__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(22px, calc(30 * var(--u)), 36px);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.acard__text {
+  margin: 0;
+  color: var(--stone);
+  font-size: clamp(14px, calc(15 * var(--u)), 16px);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+/* Enlace con subrayado que se dibuja al pasar por encima */
+.acard__link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 3px;
+  color: var(--ink);
+  font: 500 clamp(14px, calc(15 * var(--u)), 16px)/1.2 var(--font-ui);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  background: linear-gradient(currentColor 0 0) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.5s var(--ease-out);
+}
+
+.acard__link i { transition: translate 0.5s var(--ease-out); }
+.acard__link:hover { background-size: 100% 1px; }
+.acard__link:hover i { translate: 4px 0; }
+
+.acard__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(12 * var(--u));
+  margin: calc(6 * var(--u)) 0 0;
+  padding: calc(16 * var(--u)) calc(18 * var(--u));
+  border-radius: calc(22 * var(--u));
+  background: #f4f3f1;
+}
+
+/* Valor arriba y qué mide debajo */
+.acard__stats div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+  min-width: 0;
+}
+
+.acard__stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(20px, calc(26 * var(--u)), 30px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.acard__stats dt {
+  color: var(--stone);
+  font-size: max(10.5px, calc(11 * var(--u)));
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media (hover: hover) {
+  .acard[data-pos="0"]:hover .acard__media img { scale: 1.05; filter: grayscale(0.3); }
+  .acard[data-pos="-1"]:hover::after,
+  .acard[data-pos="1"]:hover::after { opacity: 0.45; }
+}
+
+/* Flechas: sobre los bordes de la tarjeta de delante, encima de las de detrás */
+.aud__arrow {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  width: 46px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 18px;
+  cursor: pointer;
+  translate: 0 -50%;
+  box-shadow: 0 12px 26px -12px rgb(13 13 13 / 0.6);
+  transition: background-color 0.3s var(--ease-out), scale 0.5s var(--ease-out);
+}
+
+.aud__arrow--prev { left: calc(50% - var(--cw) / 2 - 23px); }
+.aud__arrow--next { right: calc(50% - var(--cw) / 2 - 23px); }
+
+.aud__arrow i { transition: translate 0.5s var(--ease-out); }
+.aud__arrow:hover { background: #262626; }
+.aud__arrow--prev:hover i { translate: -2px 0; }
+.aud__arrow--next:hover i { translate: 2px 0; }
+.aud__arrow:active { scale: 0.92; }
+
+.aud__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: clamp(28px, calc(44 * var(--u)), 52px);
+}
+
+.aud__dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(13 13 13 / 0.18);
+  cursor: pointer;
+  transition: width 0.6s var(--ease-out), background-color 0.4s var(--ease-out);
+}
+
+/* Zona de toque más grande que el punto */
+.aud__dot::before {
+  content: "";
+  position: absolute;
+  inset: -12px -4px;
+}
+
+.aud__dot:hover { background: rgb(13 13 13 / 0.35); }
+
+.aud__dot.is-active {
+  width: 30px;
+  background: var(--ink);
+}
+
+/* ----- Pie: llamada al selector y aviso ----- */
+
+.aud__foot {
+  display: grid;
+  justify-items: center;
+  gap: calc(22 * var(--u));
+  margin-top: clamp(32px, calc(52 * var(--u)), 60px);
+}
+
+.aud__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(16 * var(--u));
+  height: max(52px, calc(58 * var(--u)));
+  padding: 0 max(6px, calc(6 * var(--u))) 0 calc(28 * var(--u));
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 500 clamp(14.5px, calc(15.5 * var(--u)), 17px)/1 var(--font-ui);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: background-color 0.35s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.aud__cta-icon {
+  width: max(40px, calc(46 * var(--u)));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.14);
+  font-size: max(16px, calc(18 * var(--u)));
+  transition: translate 0.5s var(--ease-out), background-color 0.35s var(--ease-out);
+}
+
+.aud__cta:hover { background: #262626; }
+.aud__cta:hover .aud__cta-icon { translate: 4px 0; background: rgb(255 255 255 / 0.22); }
+.aud__cta:active { transform: scale(0.98); }
+.aud__cta:focus-visible { outline-offset: 4px; }
+
+.aud__legal {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 62ch;
+  margin: 0;
+  color: var(--stone);
+  font-size: clamp(13px, calc(13.5 * var(--u)), 14.5px);
+  line-height: 1.5;
+}
+
+.aud__legal i {
+  flex: none;
+  margin-top: 0.15em;
+  color: var(--ink);
+  font-size: 1.2em;
+}
+
+/* Antes de entrar con el scroll (audience.js quita la clase al animar la entrada) */
+.aud.is-armed .aud__head > *,
+.aud.is-armed :is(.acard, .aud__arrow, .aud__dots, .aud__foot > *) { opacity: 0; }
+
+/* ---------- Estudios e información científica ----------
+   Diseño de Stitch ("Estudios e Información Científica"): encabezado a la izquierda con los sellos
+   de las fuentes, una barra con el título del catálogo y 6 fichas de estudio en 3 columnas. Cada
+   ficha: etiqueta y año, revista, título, resumen y, abajo, una caja de referencia (DOI, PMID) con
+   el enlace a la fuente. Comparte panel, aire lateral y --u con el resto de secciones; las fichas
+   usan el marco blanco y las sombras de las tarjetas de Guías. */
+
+.evid__head {
+  width: 100%;
+  max-width: 2560px;
+  margin: 0 auto;
+  display: grid;
+  justify-items: start;
+  gap: clamp(14px, calc(18 * var(--u)), 22px);
+}
+
+.evid__eyebrow { gap: 7px; }
+.evid__eyebrow i { font-size: 15px; }
+
+.evid__title {
+  max-width: 12em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(36px, calc(60 * var(--u)), 76px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.evid__title em,
+.evid__sub em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+
+.evid__lede {
+  max-width: 58ch;
+  margin: clamp(2px, calc(6 * var(--u)), 8px) 0 0;
+  color: var(--stone);
+  font-size: max(15px, calc(16.5 * var(--u)));
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+/* Sellos: pastillas blancas con su icono */
+.evid__seals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: calc(6 * var(--u)) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evid__seals li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: max(34px, calc(36 * var(--u)));
+  padding: 0 14px 0 11px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: max(11px, calc(11.5 * var(--u)));
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 2px 8px -3px rgb(13 13 13 / 0.14);
+}
+
+.evid__seals i { font-size: 15px; }
+
+/* Barra del catálogo: título a la izquierda, nota a la derecha */
+.evid__bar {
+  width: 100%;
+  max-width: 2560px;
+  margin: clamp(56px, calc(96 * var(--u)), 120px) auto 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 40px;
+  padding-bottom: clamp(18px, calc(24 * var(--u)), 28px);
+  border-bottom: 1px solid var(--hair);
+}
+
+.evid__kicker {
+  margin: 0 0 10px;
+  color: var(--stone);
+  font-size: max(11px, calc(12 * var(--u)));
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.evid__sub {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(26px, calc(36 * var(--u)), 44px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.evid__note {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--stone);
+  font-size: clamp(13px, calc(13.5 * var(--u)), 14.5px);
+  line-height: 1.5;
+  text-align: right;
+}
+
+/* Rejilla de fichas */
+.evid__grid {
+  width: 100%;
+  max-width: 2560px;
+  margin: clamp(24px, calc(32 * var(--u)), 40px) auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.paper {
+  --r: calc(22 * var(--u));
+  --pad: calc(28 * var(--u));
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: calc(6 * var(--u));
+  border-radius: var(--r);
+  background: var(--paper);
+  box-shadow:
+    0 0 0 1px rgb(13 13 13 / 0.045),
+    0 1px 2px rgb(13 13 13 / 0.04),
+    0 14px 34px -16px rgb(13 13 13 / 0.2);
+  transition: translate 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out);
+}
+
+.paper__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--pad) - 6 * var(--u)) calc(var(--pad) - 6 * var(--u)) var(--pad);
+}
+
+.paper__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.paper__tag {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: var(--linen);
+  color: var(--ink);
+  font-size: max(10.5px, calc(11 * var(--u)));
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.paper__year,
+.paper__live {
+  color: var(--stone);
+  font-size: max(12px, calc(12.5 * var(--u)));
+  font-variant-numeric: tabular-nums;
+}
+
+.paper__source {
+  margin: calc(20 * var(--u)) 0 0;
+  color: var(--stone);
+  font-size: max(11px, calc(11.5 * var(--u)));
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.paper__title {
+  margin: calc(14 * var(--u)) 0 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(19px, calc(21 * var(--u)), 25px);
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  text-wrap: pretty;
+}
+
+.paper__text {
+  margin: calc(16 * var(--u)) 0 0;
+  color: var(--stone);
+  font-size: clamp(13.5px, calc(14 * var(--u)), 15px);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* Caja de referencia: lino dentro del marco blanco, con los identificadores y el enlace */
+.paper__ref {
+  display: grid;
+  gap: calc(18 * var(--u));
+  padding: calc(20 * var(--u)) calc(22 * var(--u)) calc(16 * var(--u));
+  border-radius: calc(var(--r) - 6 * var(--u));
+  background: var(--linen);
+}
+
+.paper__ids {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  font: 500 max(11.5px, calc(12 * var(--u)))/1.4 ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+.paper__ids div {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+}
+
+.paper__ids dt {
+  flex: none;
+  color: var(--stone);
+}
+
+.paper__ids dt::after { content: ":"; }
+
+.paper__ids dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.paper__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: calc(14 * var(--u));
+  border-top: 1px solid var(--hair);
+  color: var(--ink);
+  font: 500 max(13px, calc(13.5 * var(--u)))/1.3 var(--font-ui);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+
+.paper__link i {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--paper);
+  font-size: 15px;
+  transition: translate 0.5s var(--ease-out), background-color 0.35s var(--ease-out), color 0.35s var(--ease-out);
+}
+
+.paper__link:hover i {
+  translate: 2px -2px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.paper__link:focus-visible { outline-offset: 4px; border-radius: 4px; }
+
+/* Ensayo en curso: etiqueta en tinta y un punto que late */
+.paper--trial .paper__tag {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.paper__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink);
+}
+
+.paper__pulse {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.paper__pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  animation: paper-pulse 2.4s var(--ease-out) infinite;
+}
+
+@keyframes paper-pulse {
+  from { opacity: 0.45; transform: scale(1); }
+  to { opacity: 0; transform: scale(3.2); }
+}
+
+@media (hover: hover) {
+  .paper:hover {
+    translate: 0 -3px;
+    box-shadow:
+      0 0 0 1px rgb(13 13 13 / 0.06),
+      0 1px 2px rgb(13 13 13 / 0.04),
+      0 22px 44px -18px rgb(13 13 13 / 0.26);
+  }
+}
+
+/* Antes de entrar con el scroll (evidence.js quita la clase al animar la entrada) */
+.evid.is-armed :is(.evid__head > *, .evid__bar, .paper) {
+  opacity: 0;
+  translate: 0 18px;
+}
+
+.evid.is-in :is(.evid__head > *, .evid__bar, .paper) {
+  transition: opacity 0.9s var(--ease-out), translate 0.9s var(--ease-out), box-shadow 0.6s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+@media (max-width: 1099px) {
+  .evid__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .evid__bar { flex-direction: column; align-items: flex-start; }
+  .evid__note { text-align: left; }
+}
+
+@media (max-width: 640px) {
+  .evid,
+  .faq { --u: 0.8px; }
+  .evid__grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .paper { --pad: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper__pulse::after { animation: none; }
+  .paper,
+  .paper__link i { transition: none; }
+}
+
+/* ---------- Preguntas frecuentes ----------
+   Acordeón como la referencia: filas redondeadas con su número y un botón negro con +; la abierta
+   pasa a blanco con un borde irisado y el + gira hasta ser una × sobre blanco. El panel se abre
+   animando grid-template-rows (0fr → 1fr) y sus párrafos entran en cascada. Solo con JS
+   (.faq.is-ready) se pliegan las respuestas: sin él se ven todas. Comparte panel, aire lateral,
+   --u y encabezado con el resto de secciones. */
+
+.faq .faq__head {
+  justify-items: center;
+  text-align: center;
+}
+
+.faq .faq__title { max-width: none; }
+
+.faq__list {
+  width: min(100%, calc(820 * var(--u)));
+  margin: clamp(36px, calc(56 * var(--u)), 64px) auto 0;
+  display: grid;
+  gap: calc(10 * var(--u));
+}
+
+.faq__item {
+  position: relative;
+  border-radius: calc(24 * var(--u));
+  background: #efeeeb;
+  box-shadow: inset 0 0 0 1px rgb(13 13 13 / 0.035);
+  transition: background-color 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
+}
+
+/* Borde irisado de la abierta: un degradado recortado a 1,5 px con una máscara */
+.faq__item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(115deg, #f2c6e3, #d2cbff 30%, #bde2ff 56%, #c9eedb 78%, #ffe1b6);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s var(--ease-out);
+}
+
+.faq__item.is-open {
+  background: var(--paper);
+  box-shadow:
+    0 0 0 4px rgb(210 203 255 / 0.14),
+    0 22px 44px -26px rgb(13 13 13 / 0.28);
+}
+
+.faq__item.is-open::before { opacity: 1; }
+
+.faq__q {
+  margin: 0;
+  font: inherit;
+}
+
+.faq__btn {
+  width: 100%;
+  min-height: max(58px, calc(64 * var(--u)));
+  display: flex;
+  align-items: center;
+  gap: calc(14 * var(--u));
+  padding: 10px calc(12 * var(--u)) 10px calc(16 * var(--u));
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  color: var(--ink);
+  font: 450 clamp(15px, calc(16.5 * var(--u)), 18px)/1.35 var(--font-ui);
+  letter-spacing: -0.01em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq__btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.faq__n {
+  flex: none;
+  width: max(24px, calc(26 * var(--u)));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: calc(8 * var(--u));
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05);
+  color: var(--stone);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.5s var(--ease-out);
+}
+
+.faq__item.is-open .faq__n { background: #f4f3f1; }
+
+.faq__text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Botón: + negro; abierta, × negra sobre blanco */
+.faq__icon {
+  flex: none;
+  width: max(36px, calc(40 * var(--u)));
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: max(16px, calc(17 * var(--u)));
+  box-shadow: 0 6px 14px -8px rgb(13 13 13 / 0.6);
+  transition:
+    background-color 0.45s var(--ease-out),
+    color 0.45s var(--ease-out),
+    box-shadow 0.45s var(--ease-out),
+    scale 0.5s var(--ease-out);
+}
+
+.faq__icon i { transition: rotate 0.6s var(--ease-out); }
+
+.faq__item.is-open .faq__icon {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--hair), 0 4px 10px -6px rgb(13 13 13 / 0.3);
+}
+
+.faq__item.is-open .faq__icon i { rotate: 45deg; }
+
+@media (hover: hover) {
+  .faq__item:not(.is-open):hover { background: #e9e8e5; }
+  .faq__btn:hover .faq__icon { scale: 1.07; }
+}
+
+.faq__btn:active .faq__icon { scale: 0.94; }
+
+/* Respuesta, alineada con el texto de la pregunta y sin pasar por debajo del botón */
+.faq__body {
+  padding: 0 calc(70 * var(--u)) calc(26 * var(--u)) calc(56 * var(--u));
+}
+
+.faq__body p {
+  max-width: 62ch;
+  margin: 0 0 calc(10 * var(--u));
+  color: var(--stone);
+  font-size: clamp(14px, calc(14.5 * var(--u)), 15.5px);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.faq__body p:last-child { margin-bottom: 0; }
+
+.faq__body a {
+  color: var(--ink);
+  text-underline-offset: 0.2em;
+}
+
+/* Plegado (solo con JS): la fila del panel pasa de 0 a su alto y los párrafos entran en cascada */
+.faq.is-ready .faq__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.6s var(--ease-soft);
+}
+
+.faq.is-ready .faq__item.is-open .faq__panel { grid-template-rows: 1fr; }
+
+.faq__clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.faq.is-ready .faq__body p {
+  opacity: 0;
+  translate: 0 8px;
+  transition: opacity 0.3s var(--ease-out), translate 0.5s var(--ease-out);
+}
+
+.faq.is-ready .faq__item.is-open .faq__body p {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: calc(0.12s + var(--i, 0) * 0.06s);
+}
+
+.faq__more {
+  margin: clamp(32px, calc(48 * var(--u)), 56px) 0 0;
+  color: var(--stone);
+  font-size: clamp(14px, calc(15 * var(--u)), 16px);
+  text-align: center;
+}
+
+/* Enlace con subrayado que se dibuja al pasar por encima (como en Perfiles) */
+.faq__more a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  padding-bottom: 2px;
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+  background: linear-gradient(currentColor 0 0) 0 100% / 100% 1px no-repeat;
+  transition: background-size 0.5s var(--ease-out);
+}
+
+.faq__more a:hover { background-size: 0 1px; background-position: 100% 100%; }
+.faq__more i { font-size: 1.1em; }
+
+/* Antes de entrar con el scroll (faq.js quita la clase al animar la entrada) */
+.faq.is-armed .faq__head > *,
+.faq.is-armed :is(.faq__item, .faq__more) { opacity: 0; }
+
+/* Móvil: la respuesta usa casi todo el ancho */
+@media (max-width: 640px) {
+  .faq__body { padding: 0 18px 22px calc(30 * var(--u) + 24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__item,
+  .faq__item::before,
+  .faq__n,
+  .faq__icon,
+  .faq__icon i,
+  .faq.is-ready .faq__panel,
+  .faq.is-ready .faq__body p,
+  .faq__more a { transition: none; }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .stage {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 0;
+  }
+
+  .cosmos {
+    height: min(92svh, 760px);
+    min-height: 520px;
+  }
+
+  .product {
+    grid-template-rows: auto clamp(340px, 62svh, 560px) auto auto;
+    padding-bottom: 64px;   /* aire para la pestaña del indicador de scroll */
+  }
+
+  .tools--left { left: 2%; }
+  .tools--right { right: 2%; }
+  .drop-next { right: 1%; }
+
+  .scroll-cue { left: 50%; }
+}
+
+/* Guías en tabletas: 2 columnas. La desplegada ocupa todo el ancho, con la imagen arriba, y ya no
+   acompaña al scroll */
+@media (max-width: 1099px) {
+  .compare__layout { grid-template-columns: minmax(0, 1fr); }
+  .reads__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .reads__stage { grid-column: 1 / -1; grid-row: auto; }
+  .read.is-featured {
+    position: relative;
+    top: auto;
+    height: auto;
+    max-height: none;
+  }
+  .read.is-featured .read__media { flex: none; height: clamp(240px, 44svh, 480px); min-height: 0; }
+  .reads__all { min-height: 220px; }
+}
+
+/* Guías en el móvil: una columna; todo un poco más compacto */
+@media (max-width: 640px) {
+  .compare,
+  .order,
+  .reads,
+  .aud { --u: 0.8px; }
+  .order__grid { grid-template-columns: min(var(--cw), 100%); }
+  .order .order__head,
+  .ship { width: 100%; }
+  .compare__scroll { padding: 6px 4px; }
+  .quiz { padding: 24px 20px 22px; }
+  .reads__grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .read { min-height: 0; }
+  .read__body { padding: 22px; }
+  .read.is-featured .read__media { height: auto; aspect-ratio: 4 / 5; }
+  .read.is-featured .read__body { padding: 0 18px 20px; }
+  .read.is-featured .read__meta { flex-wrap: wrap; }
+  .reads__all { min-height: 110px; }
+}
+
+/* Perfiles: la tarjeta se apila (foto arriba) cuando ya no caben dos columnas */
+@media (max-width: 900px) {
+  .acard {
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(22 * var(--u));
+  }
+
+  .acard__media { aspect-ratio: 16 / 10; }
+}
+
+/* Perfiles en el móvil: las de detrás apenas asoman y las flechas bajan a la fila de los puntos */
+@media (max-width: 640px) {
+  .aud__carousel { --peek: 12px; --cw: calc(100% - 36px); }
+  .acard { padding: 16px; border-radius: 30px; }
+  .acard__media { border-radius: 22px; }
+  .aud__dots { margin-top: 32px; }
+
+  .aud__arrow {
+    top: auto;
+    bottom: -35.5px;
+    width: 42px;
+    translate: 0 50%;
+  }
+
+  .aud__arrow--prev { left: 0; }
+  .aud__arrow--next { right: 0; }
+}
+
+@media (max-width: 480px) {
+  .frame { padding: 8px; }
+  .seal { --seal-size: clamp(190px, 50cqmin, 260px); }
+}
+
+/* ---------- Movimiento reducido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .seal,
+  .cosmos__title,
+  .bottle,
+  .product__title,
+  .product__copy,
+  .scroll-cue,
+  .scroll-cue svg { animation: none; }
+
+  .scroll-cue svg + svg { display: none; }
+
+  .brand__mark,
+  .bottle,
+  .tool,
+  .dock__btn,
+  .orbit-toggle,
+  .drop-next,
+  .drop-next svg,
+  .drop-next i,
+  .read,
+  .read__pic,
+  .read__go,
+  .read__open,
+  .read__more,
+  .read__more-icon,
+  .reads__all,
+  .reads__all::before,
+  .reads__all i,
+  .compare__table :is(th, td),
+  .pcol__pic img,
+  .add,
+  .add__icon,
+  .opt span,
+  .quiz__go,
+  .quiz__go-icon { transition: none; }
+
+  .opt input:checked + span { animation: none; }
+
+  .ostep,
+  .ostep__obj img,
+  .ship__list li,
+  .ship__more,
+  .ship__more i { transition: none; }
+
+  .acard__media img,
+  .acard__link,
+  .acard__link i,
+  .aud__arrow,
+  .aud__arrow i,
+  .aud__dot,
+  .aud__cta,
+  .aud__cta-icon { transition: none; }
+
+  .ostep__obj img { animation: none; }
+}

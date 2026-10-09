@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ADN de puntos · Laboratorio</title>
+  <meta name="description" content="Prueba del ADN de puntos antes de llevarlo a la página principal.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cg stroke='%230d0d0d' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M0-46V46M-46 0H46M-32.5-32.5L32.5 32.5M32.5-32.5L-32.5 32.5'/%3E%3C/g%3E%3Ccircle r='9' fill='%230d0d0d'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Instrument+Serif:ital@1&family=Questrial&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="../styles.css?v=28">
+  <link rel="stylesheet" href="adn.css?v=2">
+</head>
+<body class="dna-lab">
+  <main class="frame">
+    <!-- Subpágina de prueba del ADN de puntos (dna.js). Tres actos al hacer scroll: la hélice en el
+         hero, los puntos como fondo de las secciones de debajo y el planeta al final. Las secciones
+         del medio son de muestra: solo sirven para ver los puntos detrás de los elementos. -->
+    <div class="lab" data-dna>
+
+      <!-- El lienzo se queda pegado a la pantalla mientras se recorre el panel -->
+      <div class="lab__sky" aria-hidden="true">
+        <canvas class="lab__canvas" data-dna-canvas></canvas>
+      </div>
+
+      <header class="lab__bar">
+        <a class="lab__back" href="../#guias">
+          <i class="ph ph-arrow-left" aria-hidden="true"></i>
+          <span>Volver a la página</span>
+        </a>
+        <p class="chip chip--dot lab__tag">Prueba · ADN de puntos</p>
+      </header>
+
+      <!-- Acto 1: la hélice ocupa la diagonal de esta caja -->
+      <section class="lab__hero" id="adn" aria-label="ADN">
+        <div class="lab__helix" data-dna-helix role="img"
+             aria-label="Una doble hélice de ADN hecha de puntos que gira sobre su eje"></div>
+        <a class="lab__cue" href="#fondo">
+          <span>Desplázate</span>
+          <span class="lab__cue-track" aria-hidden="true">
+            <svg viewBox="0 0 14 20"><path d="M7 1.5v16M1.5 12.2 7 17.7l5.5-5.5" /></svg>
+            <svg viewBox="0 0 14 20"><path d="M7 1.5v16M1.5 12.2 7 17.7l5.5-5.5" /></svg>
+          </span>
+        </a>
+      </section>
+
+      <!-- Acto 2: aquí los puntos son el fondo -->
+      <div class="lab__field" id="fondo" data-dna-field>
+        <section class="lab__block">
+          <p class="chip">Sección de muestra</p>
+          <h2 class="lab__title">Los puntos del ADN quedan <em>detrás</em> del contenido</h2>
+          <p class="lab__lede"><span class="draft">Texto de prueba para ver cómo se lee encima de los puntos. Aquí irán las secciones que se coloquen debajo del ADN.</span></p>
+        </section>
+
+        <section class="lab__cards" aria-label="Tarjetas de muestra">
+          <article class="lab__card">
+            <span class="chip lab__card-tag">Tarjeta</span>
+            <div>
+              <h3 class="lab__card-title">Tarjeta con desenfoque</h3>
+              <p class="lab__card-text"><span class="draft">El fondo de puntos se ve borroso a través del cristal.</span></p>
+            </div>
+          </article>
+          <article class="lab__card lab__card--solid">
+            <span class="chip lab__card-tag">Tarjeta</span>
+            <div>
+              <h3 class="lab__card-title">Tarjeta opaca</h3>
+              <p class="lab__card-text"><span class="draft">Tapa los puntos por completo, como las tarjetas de la página.</span></p>
+            </div>
+          </article>
+          <article class="lab__card lab__card--bare">
+            <span class="chip lab__card-tag">Texto suelto</span>
+            <div>
+              <h3 class="lab__card-title">Sin caja</h3>
+              <p class="lab__card-text"><span class="draft">Texto directamente sobre el fondo de puntos.</span></p>
+            </div>
+          </article>
+        </section>
+
+        <section class="lab__block lab__block--end">
+          <p class="chip">Sección de muestra</p>
+          <h2 class="lab__title">Más abajo, los puntos se <em>reagrupan</em></h2>
+          <p class="lab__lede"><span class="draft">Sigue bajando: el fondo se junta y forma el planeta Tierra.</span></p>
+        </section>
+      </div>
+
+      <!-- Acto 3: el planeta se forma en el centro de esta caja -->
+      <section class="lab__earth" id="planeta" aria-label="Planeta">
+        <div class="lab__globe" data-dna-globe role="img"
+             aria-label="El planeta Tierra hecho de puntos, con los continentes más densos, girando"></div>
+      </section>
+
+      <footer class="lab__tail">
+        <p>Fin de la prueba. Sube para deshacer el planeta y volver al ADN.</p>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Herramientas de la prueba: en qué acto estás y panel de ajustes (adn-lab.js) -->
+  <nav class="dna-hud" aria-label="Actos">
+    <a class="dna-hud__step" href="#adn" data-step="0">ADN</a>
+    <a class="dna-hud__step" href="#fondo" data-step="1">Fondo</a>
+    <a class="dna-hud__step" href="#planeta" data-step="2">Planeta</a>
+    <span class="dna-hud__bar" aria-hidden="true"><span></span></span>
+  </nav>
+
+  <button class="dna-toggle" type="button" aria-expanded="false" aria-controls="dna-panel">
+    <i class="ph ph-sliders-horizontal" aria-hidden="true"></i>
+    <span>Ajustes</span>
+  </button>
+
+  <aside class="dna-panel" id="dna-panel" aria-label="Ajustes del ADN" hidden>
+    <header class="dna-panel__head">
+      <div>
+        <p class="dna-panel__title">Ajustes del ADN</p>
+        <p class="dna-panel__note">Cambian las variables <code>--dna-*</code> en vivo.</p>
+      </div>
+      <button class="dna-panel__close" type="button" aria-label="Cerrar ajustes"><i class="ph ph-x" aria-hidden="true"></i></button>
+    </header>
+    <div class="dna-panel__body" data-controls></div>
+    <footer class="dna-panel__foot">
+      <button class="dna-btn dna-btn--ink" type="button" data-copy><i class="ph ph-copy" aria-hidden="true"></i><span>Copiar CSS</span></button>
+      <button class="dna-btn" type="button" data-replay title="Vuelve arriba y repite la entrada del ADN"><i class="ph ph-play" aria-hidden="true"></i><span>Repetir</span></button>
+      <button class="dna-btn" type="button" data-reset><i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i><span>Restablecer</span></button>
+    </footer>
+  </aside>
+
+  <script src="../earth-land.js" defer></script>
+  <script src="../dna.js?v=3" defer></script>
+  <script src="adn-lab.js?v=2" defer></script>
+</body>
+</html>

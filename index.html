@@ -1,0 +1,1192 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X</title>
+  <meta name="description" content="Cannabis Lab. Aceites de CBD.">
+  <meta name="theme-color" content="#0d0d0d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cg stroke='%230d0d0d' stroke-width='5' stroke-linecap='round'%3E%3Cpath d='M0-46V46M-46 0H46M-32.5-32.5L32.5 32.5M32.5-32.5L-32.5 32.5'/%3E%3C/g%3E%3Ccircle r='9' fill='%230d0d0d'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Instrument+Serif:ital@1&family=Questrial&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css">
+  <link rel="stylesheet" href="styles.css?v=33">
+  <link rel="stylesheet" href="site.css?v=1">
+</head>
+<body>
+  <main class="frame">
+    <div class="stage">
+
+      <!-- Lado izquierdo: órbita de palabras (hero de Cosmos, imágenes → texto) -->
+      <section class="cosmos" data-orbit aria-labelledby="cosmos-title">
+        <!-- Logo y encabezado: las palabras en órbita esquivan todo el bloque (orbit.js) -->
+        <header class="cosmos__head">
+          <a class="brand" href="#" aria-label="Cannabis Lab, inicio">
+            <svg class="brand__mark" viewBox="-50 -50 100 100" aria-hidden="true">
+              <defs>
+                <line id="ray-l" x1="0" y1="-7" x2="0" y2="-47" />
+                <line id="ray-s" x1="0" y1="-7" x2="0" y2="-33" />
+              </defs>
+              <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                <use href="#ray-l" transform="rotate(0)" /><use href="#ray-s" transform="rotate(15)" />
+                <use href="#ray-l" transform="rotate(30)" /><use href="#ray-s" transform="rotate(45)" />
+                <use href="#ray-l" transform="rotate(60)" /><use href="#ray-s" transform="rotate(75)" />
+                <use href="#ray-l" transform="rotate(90)" /><use href="#ray-s" transform="rotate(105)" />
+                <use href="#ray-l" transform="rotate(120)" /><use href="#ray-s" transform="rotate(135)" />
+                <use href="#ray-l" transform="rotate(150)" /><use href="#ray-s" transform="rotate(165)" />
+                <use href="#ray-l" transform="rotate(180)" /><use href="#ray-s" transform="rotate(195)" />
+                <use href="#ray-l" transform="rotate(210)" /><use href="#ray-s" transform="rotate(225)" />
+                <use href="#ray-l" transform="rotate(240)" /><use href="#ray-s" transform="rotate(255)" />
+                <use href="#ray-l" transform="rotate(270)" /><use href="#ray-s" transform="rotate(285)" />
+                <use href="#ray-l" transform="rotate(300)" /><use href="#ray-s" transform="rotate(315)" />
+                <use href="#ray-l" transform="rotate(330)" /><use href="#ray-s" transform="rotate(345)" />
+              </g>
+              <circle r="5.5" fill="currentColor" />
+            </svg>
+            <span translate="no">Brand</span>
+          </a>
+          <h2 class="cosmos__title" id="cosmos-title">
+            El escudo que necesitas <span>para dar lo mejor de ti</span>
+          </h2>
+        </header>
+
+        <canvas class="orbit" aria-hidden="true"></canvas>
+
+        <button class="orbit-toggle" type="button" aria-pressed="false" aria-label="Pausar órbita">
+          <i class="ph ph-pause" aria-hidden="true"></i>
+        </button>
+
+        <!-- Palabras en órbita (se muestran las que caben; el resto entra por relevo).
+             Edita estos <li> para cambiarlas. -->
+        <ul id="orbit-words" class="sr-only" aria-label="Palabras en órbita">
+          <!-- Mente -->
+          <li>Fatiga</li>
+          <li>Desatención</li>
+          <li>Distracción</li>
+          <li>Confusión</li>
+          <li>Lentitud</li>
+          <li>Niebla</li>
+          <li>Olvido</li>
+          <li>Dispersión</li>
+          <li>Sobrecarga</li>
+          <li>Agotamiento</li>
+          <li>Torpeza</li>
+          <li>Desconexión</li>
+          <li>Estancamiento</li>
+          <li>Vacilación</li>
+          <li>Fragmentación</li>
+          <li>Interrupción</li>
+          <li>Caída</li>
+          <li>Desfase</li>
+          <!-- Cuerpo -->
+          <li>Cansancio</li>
+          <li>Pesadez</li>
+          <li>Letargia</li>
+          <li>Debilidad</li>
+          <li>Flojedad</li>
+          <li>Opresión</li>
+          <li>Pesadumbre</li>
+          <li>Inercia</li>
+          <li>Flacidez</li>
+          <li>Agobio</li>
+          <!-- Ánimo -->
+          <li>Irritabilidad</li>
+          <li>Apatía</li>
+          <li>Estrés</li>
+          <li>Nerviosismo</li>
+          <li>Desánimo</li>
+          <li>Melancolía</li>
+          <li>Inquietud</li>
+          <li>Saturación</li>
+          <!-- Rendimiento -->
+          <li>Improductividad</li>
+          <li>Pausa</li>
+          <li>Retraso</li>
+          <li>Vacío</li>
+          <li>Disminución</li>
+          <li>Alteración</li>
+          <li>Desgaste</li>
+          <li>Pérdida</li>
+          <li>Oscurecimiento</li>
+        </ul>
+
+        <!-- Una persona corriendo dentro del escudo de púas (shield.js lo dibuja: la mitad trasera
+             debajo y la delantera encima). Vídeo en bucle con fondo transparente; runner.js elige
+             el formato y lo reproduce o lo pausa. El póster es el primer fotograma del bucle. -->
+        <figure class="seal">
+          <canvas class="shield shield--back" aria-hidden="true"></canvas>
+          <video class="seal__runner" width="272" height="432" poster="assets/runner-poster.webp?v=2"
+                 muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback
+                 aria-hidden="true" data-runner data-anim="assets/runner.webp?v=2">
+            <source src="assets/runner.webm?v=2" type='video/webm; codecs="vp09.00.10.08"'>
+          </video>
+          <canvas class="shield shield--front" aria-hidden="true"></canvas>
+          <figcaption class="sr-only">Escudo de púas que rodea y protege a una persona que corre</figcaption>
+        </figure>
+      </section>
+
+      <!-- Lado derecho: producto (igual que la referencia) -->
+      <section class="product" aria-labelledby="product-title">
+        <header class="product__head">
+          <p class="product__kicker">Nuestros productos</p>
+          <!-- Carrito (con su contador, store.js) y consulta del pedido -->
+          <nav class="dock" aria-label="Tu pedido">
+            <a class="dock__btn" href="carrito/" aria-label="Carrito"><i class="ph ph-handbag" aria-hidden="true"></i><span class="dock__count" data-cart-count hidden>0</span></a>
+            <a class="dock__btn" href="cuenta/" aria-label="Consultar mi pedido"><i class="ph ph-user" aria-hidden="true"></i></a>
+          </nav>
+        </header>
+
+        <div class="product__stage">
+          <div class="tools tools--left">
+            <button class="tool" type="button" aria-label="Acercar producto" aria-pressed="false" data-zoom>
+              <i class="ph-light ph-magnifying-glass-plus" aria-hidden="true"></i>
+            </button>
+            <button class="tool" type="button" aria-label="Origen: cáñamo">
+              <i class="ph-light ph-leaf" aria-hidden="true"></i>
+            </button>
+            <button class="tool" type="button" aria-label="Modo de uso: gotero">
+              <i class="ph-light ph-eyedropper" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div class="tools tools--right">
+            <button class="tool" type="button" aria-label="Duración del efecto">
+              <i class="ph-light ph-timer" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <img class="bottle" src="assets/product1.webp" width="688" height="1230" fetchpriority="high"
+               alt="Frasco gotero de vidrio ámbar con aceite de CBD">
+
+          <button class="drop-next" type="button" aria-label="Siguiente producto">
+            <svg viewBox="0 0 96 72" aria-hidden="true">
+              <path d="M60 2A34 34 0 1 1 60 70C47 70 38 62 24 52C14 45 6 40 6 36C6 32 14 27 24 20C38 10 47 2 60 2Z" />
+            </svg>
+            <i class="ph ph-caret-right" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <h1 class="product__title" id="product-title">Oils</h1>
+        <p class="product__copy">
+          CBD oil, or cannabidiol oil, is a natural extract from hemp that does not have psychoactive effects.
+          It is valued for its potential medicinal properties, such as alleviating pain, inflammation, anxiety
+          and insomnia. In cosmetics, it helps moisturize the skin and soothe irritations. It is advisable to
+          consult a doctor before use.
+        </p>
+      </section>
+
+      <!-- Indicador de scroll: una pestaña del marco que entra en el escenario -->
+      <a class="scroll-cue" href="#comparar" aria-label="Bajar al comparador">
+        <span class="scroll-cue__track" aria-hidden="true">
+          <svg viewBox="0 0 14 20"><path d="M7 1.5v16M1.5 12.2 7 17.7l5.5-5.5" /></svg>
+          <svg viewBox="0 0 14 20"><path d="M7 1.5v16M1.5 12.2 7 17.7l5.5-5.5" /></svg>
+        </span>
+      </a>
+
+    </div>
+
+    <!-- Comparador: la tabla de los 4 productos y "Ayúdame a elegir". Cada nombre enlaza a su
+         ficha (productos/producto-N/) y "Añadir" mete el producto en el carrito (store.js, data-add).
+         Las opciones del selector son radios normales (se marcan sin JS); "Ver recomendación"
+         todavía no hace nada. Las 4 fotos son la del hero hasta tener la de cada
+         producto. compare.js solo anima la entrada. Precios: valores de muestra de la tienda. -->
+    <section class="compare" id="comparar" aria-labelledby="compare-title">
+      <header class="compare__head">
+        <p class="chip">Comparar</p>
+        <h2 class="compare__title" id="compare-title">Compara los 4 <em>productos</em></h2>
+        <p class="compare__lede"><span class="draft">Aquí una línea que explique cómo elegir.</span></p>
+      </header>
+
+      <div class="compare__layout">
+
+        <div class="compare__card">
+          <div class="compare__scroll">
+            <table class="compare__table">
+              <caption class="sr-only">Comparación de los 4 productos</caption>
+              <thead>
+                <tr>
+                  <td></td>
+                  <th scope="col">
+                    <span class="pcol">
+                      <span class="pcol__pic">
+                        <img src="assets/product1.webp" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                        <span class="pcol__n" aria-hidden="true">1</span>
+                      </span>
+                      <a class="pcol__name" href="productos/producto-1/">Producto 1</a>
+                    </span>
+                  </th>
+                  <th scope="col">
+                    <span class="pcol">
+                      <span class="pcol__pic">
+                        <img src="assets/product1.webp" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                        <span class="pcol__n" aria-hidden="true">2</span>
+                      </span>
+                      <a class="pcol__name" href="productos/producto-2/">Producto 2</a>
+                    </span>
+                  </th>
+                  <th scope="col">
+                    <span class="pcol">
+                      <span class="pcol__pic">
+                        <img src="assets/product1.webp" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                        <span class="pcol__n" aria-hidden="true">3</span>
+                      </span>
+                      <a class="pcol__name" href="productos/producto-3/">Producto 3</a>
+                    </span>
+                  </th>
+                  <th scope="col">
+                    <span class="pcol">
+                      <span class="pcol__pic">
+                        <img src="assets/product1.webp" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                        <span class="pcol__n" aria-hidden="true">4</span>
+                      </span>
+                      <a class="pcol__name" href="productos/producto-4/">Producto 4</a>
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Formato</th>
+                  <td><span class="draft">Aquí el formato 1</span></td>
+                  <td><span class="draft">Aquí el formato 2</span></td>
+                  <td><span class="draft">Aquí el formato 3</span></td>
+                  <td><span class="draft">Aquí el formato 4</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Contenido</th>
+                  <td><span class="draft">Aquí el contenido</span></td>
+                  <td><span class="draft">Aquí el contenido</span></td>
+                  <td><span class="draft">Aquí el contenido</span></td>
+                  <td><span class="draft">Aquí el contenido</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Uso según la ficha</th>
+                  <td><span class="draft">Aquí el uso oficial</span></td>
+                  <td><span class="draft">Aquí el uso oficial</span></td>
+                  <td><span class="draft">Aquí el uso oficial</span></td>
+                  <td><span class="draft">Aquí el uso oficial</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Duración del envase</th>
+                  <td><span class="draft">Aquí los días</span></td>
+                  <td><span class="draft">Aquí los días</span></td>
+                  <td><span class="draft">Aquí los días</span></td>
+                  <td><span class="draft">Aquí los días</span></td>
+                </tr>
+                <tr>
+                  <th scope="row">Precio</th>
+                  <td><strong class="price">24,90&nbsp;€</strong> <small>IVA incl.</small></td>
+                  <td><strong class="price">34,90&nbsp;€</strong> <small>IVA incl.</small></td>
+                  <td><strong class="price">44,90&nbsp;€</strong> <small>IVA incl.</small></td>
+                  <td><strong class="price">59,90&nbsp;€</strong> <small>IVA incl.</small></td>
+                </tr>
+                <tr class="compare__buy">
+                  <th scope="row"><span class="sr-only">Añadir al carrito</span></th>
+                  <td><button class="add" type="button" data-add="p1" aria-label="Añadir Producto 1 al carrito"><span>Añadir</span><span class="add__icon" aria-hidden="true"><i class="ph ph-plus"></i></span></button></td>
+                  <td><button class="add" type="button" data-add="p2" aria-label="Añadir Producto 2 al carrito"><span>Añadir</span><span class="add__icon" aria-hidden="true"><i class="ph ph-plus"></i></span></button></td>
+                  <td><button class="add" type="button" data-add="p3" aria-label="Añadir Producto 3 al carrito"><span>Añadir</span><span class="add__icon" aria-hidden="true"><i class="ph ph-plus"></i></span></button></td>
+                  <td><button class="add" type="button" data-add="p4" aria-label="Añadir Producto 4 al carrito"><span>Añadir</span><span class="add__icon" aria-hidden="true"><i class="ph ph-plus"></i></span></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <form class="quiz" aria-labelledby="quiz-title">
+          <h3 class="quiz__title" id="quiz-title">Ayúdame a elegir</h3>
+          <p class="quiz__note">Solo preguntamos por preferencias prácticas, nunca por síntomas.</p>
+          <fieldset class="quiz__q">
+            <legend><span class="quiz__n" aria-hidden="true">01</span><span class="draft">Aquí: ¿qué formato prefieres?</span></legend>
+            <div class="quiz__opts" style="--cols: 2">
+              <label class="opt"><input type="radio" name="fmt" value="1"><span>Formato 1</span></label>
+              <label class="opt"><input type="radio" name="fmt" value="2"><span>Formato 2</span></label>
+              <label class="opt"><input type="radio" name="fmt" value="3"><span>Formato 3</span></label>
+              <label class="opt"><input type="radio" name="fmt" value="4"><span>Formato 4</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="quiz__q">
+            <legend><span class="quiz__n" aria-hidden="true">02</span><span class="draft">Aquí: ¿con qué frecuencia lo usarías?</span></legend>
+            <div class="quiz__opts" style="--cols: 2">
+              <label class="opt"><input type="radio" name="use" value="daily"><span>Todos los días</span></label>
+              <label class="opt"><input type="radio" name="use" value="sometimes"><span>De vez en cuando</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="quiz__q">
+            <legend><span class="quiz__n" aria-hidden="true">03</span><span class="draft">Aquí: ¿cuál es tu presupuesto?</span></legend>
+            <div class="quiz__opts" style="--cols: 3">
+              <label class="opt"><input type="radio" name="budget" value="30"><span>Hasta 30&nbsp;€</span></label>
+              <label class="opt"><input type="radio" name="budget" value="50"><span>Hasta 50&nbsp;€</span></label>
+              <label class="opt"><input type="radio" name="budget" value="more"><span>Más de 50&nbsp;€</span></label>
+            </div>
+          </fieldset>
+          <button class="quiz__go" type="button">
+            <span>Ver recomendación</span>
+            <span class="quiz__go-icon" aria-hidden="true"><i class="ph ph-arrow-right"></i></span>
+          </button>
+          <p class="quiz__legal"><i class="ph-light ph-info" aria-hidden="true"></i><span>Si tienes síntomas o dudas médicas, consulta a un profesional sanitario.</span></p>
+        </form>
+
+      </div>
+    </section>
+
+    <!-- Cómo funciona tu pedido: encabezado del diseño de Stitch y 4 tarjetas (una por paso) con
+         su objeto 3D negro asomando por arriba, el título y una descripción breve. Los objetos son
+         los de referencias/ sin el fondo verde (assets/order-*.webp). order.js anima la entrada y
+         el objeto que sigue al puntero. Certificaciones y garantías del encabezado van como texto de
+         muestra (.draft) hasta tenerlas confirmadas. -->
+    <section class="order" id="pedido" aria-labelledby="order-title">
+      <header class="order__head">
+        <p class="chip chip--dot">Protocolo de adquisición clínica</p>
+        <h2 class="order__title" id="order-title">Cómo funciona tu pedido <em>paso a paso</em></h2>
+        <div class="order__aside">
+          <p class="order__lede">Un proceso confidencial, simplificado y sin pago por adelantado diseñado para garantizar máxima discreción y seguridad médica.</p>
+          <p class="order__proof"><span class="draft">Aquí quién verifica el proceso y cuándo se revisó (p. ej. farmacéutico colegiado · fecha)</span></p>
+          <ul class="order__badges" aria-label="Garantías">
+            <li><i class="ph-light ph-seal-check" aria-hidden="true"></i><span class="draft">Aquí la certificación de fabricación</span></li>
+            <li><i class="ph-light ph-flask" aria-hidden="true"></i><span class="draft">Aquí la acreditación del laboratorio</span></li>
+            <li><i class="ph-light ph-shield-check" aria-hidden="true"></i><span class="draft">Aquí la trazabilidad por lote</span></li>
+          </ul>
+        </div>
+      </header>
+
+      <ol class="order__grid">
+
+        <li class="ostep ostep--pick">
+          <span class="ostep__obj" aria-hidden="true"><img src="assets/order-pick.webp" width="549" height="720" alt="" loading="lazy" decoding="async"></span>
+          <div class="ostep__panel">
+            <h3 class="ostep__title">Elige tu producto</h3>
+            <p class="ostep__text">Selecciona la formulación adecuada entre nuestros 4 productos; si dudas, <a href="#comparar">compáralos arriba</a>.</p>
+          </div>
+        </li>
+
+        <li class="ostep ostep--pin">
+          <span class="ostep__obj" aria-hidden="true"><img src="assets/order-pin.webp" width="462" height="720" alt="" loading="lazy" decoding="async"></span>
+          <div class="ostep__panel">
+            <h3 class="ostep__title">Selecciona la dirección</h3>
+            <p class="ostep__text">Indica tu domicilio particular, punto de recogida seguro o casillero automatizado.</p>
+          </div>
+        </li>
+
+        <li class="ostep ostep--box">
+          <span class="ostep__obj" aria-hidden="true"><img src="assets/order-box.webp" width="718" height="720" alt="" loading="lazy" decoding="async"></span>
+          <div class="ostep__panel">
+            <h3 class="ostep__title">Envío discreto</h3>
+            <p class="ostep__text">Embalaje exterior de cartón crudo neutro, sin distintivos, marcas ni alusiones al contenido.</p>
+          </div>
+        </li>
+
+        <li class="ostep ostep--pay">
+          <span class="ostep__obj" aria-hidden="true"><img src="assets/order-pay.webp" width="720" height="325" alt="" loading="lazy" decoding="async"></span>
+          <div class="ostep__panel">
+            <h3 class="ostep__title">Pagas al recibirlo</h3>
+            <p class="ostep__text">Contra reembolso: no pagas nada hasta que el pedido llega a tu puerta.</p>
+          </div>
+        </li>
+
+      </ol>
+
+      <!-- Zonas de envío: una banda del ancho de la fila de tarjetas, en tres columnas (intro, UE y
+           fuera de la UE) que se apilan en pantallas estrechas. Textos y plazos: los facilitados
+           por el usuario. -->
+      <div class="ship" id="envios" role="region" aria-labelledby="ship-title">
+        <!-- Banderas (se usan con <use href="#flag-xx">) -->
+        <svg class="ship__sprite" aria-hidden="true" focusable="false">
+          <symbol id="flag-nl" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#ae1c28" d="M0 0h3v.67H0z"/><path fill="#fff" d="M0 .67h3v.66H0z"/><path fill="#21468b" d="M0 1.33h3V2H0z"/></symbol>
+          <symbol id="flag-de" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#000" d="M0 0h3v.67H0z"/><path fill="#d00" d="M0 .67h3v.66H0z"/><path fill="#ffce00" d="M0 1.33h3V2H0z"/></symbol>
+          <symbol id="flag-fr" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#002654" d="M0 0h1v2H0z"/><path fill="#fff" d="M1 0h1v2H1z"/><path fill="#ce1126" d="M2 0h1v2H2z"/></symbol>
+          <symbol id="flag-pl" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#fff" d="M0 0h3v1H0z"/><path fill="#dc143c" d="M0 1h3v1H0z"/></symbol>
+          <symbol id="flag-cz" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#fff" d="M0 0h3v1H0z"/><path fill="#d7141a" d="M0 1h3v1H0z"/><path fill="#11457e" d="M0 0l1.5 1L0 2z"/></symbol>
+          <symbol id="flag-it" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#009246" d="M0 0h1v2H0z"/><path fill="#fff" d="M1 0h1v2H1z"/><path fill="#ce2b37" d="M2 0h1v2H2z"/></symbol>
+          <symbol id="flag-es" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#aa151b" d="M0 0h3v2H0z"/><path fill="#f1bf00" d="M0 .5h3v1H0z"/></symbol>
+          <symbol id="flag-be" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#000" d="M0 0h1v2H0z"/><path fill="#fdda24" d="M1 0h1v2H1z"/><path fill="#ef3340" d="M2 0h1v2H2z"/></symbol>
+          <symbol id="flag-at" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#ed2939" d="M0 0h3v2H0z"/><path fill="#fff" d="M0 .67h3v.66H0z"/></symbol>
+          <symbol id="flag-ie" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice"><path fill="#169b62" d="M0 0h1v2H0z"/><path fill="#fff" d="M1 0h1v2H1z"/><path fill="#ff883e" d="M2 0h1v2H2z"/></symbol>
+          <symbol id="flag-se" viewBox="0 0 16 10" preserveAspectRatio="xMidYMid slice"><path fill="#006aa7" d="M0 0h16v10H0z"/><path fill="#fecc00" d="M5 0h2v10H5zM0 4h16v2H0z"/></symbol>
+          <symbol id="flag-dk" viewBox="0 0 37 28" preserveAspectRatio="xMidYMid slice"><path fill="#c8102e" d="M0 0h37v28H0z"/><path fill="#fff" d="M12 0h4v28h-4zM0 12h37v4H0z"/></symbol>
+          <symbol id="flag-uk" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice"><clipPath id="flag-uk-t"><path d="M30 15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path fill="#012169" d="M0 0h60v30H0z"/><path stroke="#fff" stroke-width="6" d="M0 0l60 30m0-30L0 30"/><path stroke="#c8102e" stroke-width="4" d="M0 0l60 30m0-30L0 30" clip-path="url(#flag-uk-t)"/><path stroke="#fff" stroke-width="10" d="M30 0v30M0 15h60"/><path stroke="#c8102e" stroke-width="6" d="M30 0v30M0 15h60"/></symbol>
+          <symbol id="flag-ch" viewBox="0 0 32 32" preserveAspectRatio="xMidYMid slice"><path fill="#da291c" d="M0 0h32v32H0z"/><path fill="#fff" d="M13 6h6v20h-6zM6 13h20v6H6z"/></symbol>
+          <symbol id="flag-no" viewBox="0 0 22 16" preserveAspectRatio="xMidYMid slice"><path fill="#ba0c2f" d="M0 0h22v16H0z"/><path fill="#fff" d="M6 0h4v16H6zM0 6h22v4H0z"/><path fill="#00205b" d="M7 0h2v16H7zM0 7h22v2H0z"/></symbol>
+          <symbol id="flag-is" viewBox="0 0 25 18" preserveAspectRatio="xMidYMid slice"><path fill="#02529c" d="M0 0h25v18H0z"/><path fill="#fff" d="M7 0h4v18H7zM0 7h25v4H0z"/><path fill="#dc1e35" d="M8 0h2v18H8zM0 8h25v2H0z"/></symbol>
+        </svg>
+
+        <div class="ship__intro">
+          <p class="ship__kicker"><i class="ph-light ph-globe-hemisphere-west" aria-hidden="true"></i>Zonas de envío</p>
+          <h3 class="ship__title" id="ship-title">Enviamos a tu país</h3>
+          <p class="ship__text">Entrega con seguimiento en 3–7 días laborables a cualquier destino, gratis a partir de 150&nbsp;€.</p>
+          <a class="ship__more" href="envios/">Ver envíos y plazos <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+        </div>
+        <div class="ship__zone">
+          <p class="ship__label"><span class="ship__tag">UE</span>Desde nuestro almacén en la UE, sin importación desde terceros países.</p>
+          <ul class="ship__list" aria-label="Países de la UE">
+              <li title="Países Bajos"><svg class="flag" aria-hidden="true"><use href="#flag-nl"/></svg><span aria-hidden="true">NL</span><span class="sr-only">Países Bajos</span></li>
+              <li title="Alemania"><svg class="flag" aria-hidden="true"><use href="#flag-de"/></svg><span aria-hidden="true">DE</span><span class="sr-only">Alemania</span></li>
+              <li title="Francia"><svg class="flag" aria-hidden="true"><use href="#flag-fr"/></svg><span aria-hidden="true">FR</span><span class="sr-only">Francia</span></li>
+              <li title="Polonia"><svg class="flag" aria-hidden="true"><use href="#flag-pl"/></svg><span aria-hidden="true">PL</span><span class="sr-only">Polonia</span></li>
+              <li title="Chequia"><svg class="flag" aria-hidden="true"><use href="#flag-cz"/></svg><span aria-hidden="true">CZ</span><span class="sr-only">Chequia</span></li>
+              <li title="Italia"><svg class="flag" aria-hidden="true"><use href="#flag-it"/></svg><span aria-hidden="true">IT</span><span class="sr-only">Italia</span></li>
+              <li title="España"><svg class="flag" aria-hidden="true"><use href="#flag-es"/></svg><span aria-hidden="true">ES</span><span class="sr-only">España</span></li>
+              <li title="Bélgica"><svg class="flag" aria-hidden="true"><use href="#flag-be"/></svg><span aria-hidden="true">BE</span><span class="sr-only">Bélgica</span></li>
+              <li title="Austria"><svg class="flag" aria-hidden="true"><use href="#flag-at"/></svg><span aria-hidden="true">AT</span><span class="sr-only">Austria</span></li>
+              <li title="Irlanda"><svg class="flag" aria-hidden="true"><use href="#flag-ie"/></svg><span aria-hidden="true">IE</span><span class="sr-only">Irlanda</span></li>
+              <li title="Suecia"><svg class="flag" aria-hidden="true"><use href="#flag-se"/></svg><span aria-hidden="true">SE</span><span class="sr-only">Suecia</span></li>
+              <li title="Dinamarca"><svg class="flag" aria-hidden="true"><use href="#flag-dk"/></svg><span aria-hidden="true">DK</span><span class="sr-only">Dinamarca</span></li>
+              <li class="ship__rest"><i class="ph-light ph-globe" aria-hidden="true"></i>Resto de la UE</li>
+          </ul>
+        </div>
+        <div class="ship__zone">
+          <p class="ship__label"><span class="ship__tag ship__tag--out">Fuera de la UE</span>Sale de la UE: puede pasar aduana.</p>
+          <ul class="ship__list" aria-label="Países fuera de la UE">
+              <li title="Reino Unido"><svg class="flag" aria-hidden="true"><use href="#flag-uk"/></svg><span aria-hidden="true">UK</span><span class="sr-only">Reino Unido</span></li>
+              <li title="Suiza"><svg class="flag" aria-hidden="true"><use href="#flag-ch"/></svg><span aria-hidden="true">CH</span><span class="sr-only">Suiza</span></li>
+              <li title="Noruega"><svg class="flag" aria-hidden="true"><use href="#flag-no"/></svg><span aria-hidden="true">NO</span><span class="sr-only">Noruega</span></li>
+              <li title="Islandia"><svg class="flag" aria-hidden="true"><use href="#flag-is"/></svg><span aria-hidden="true">IS</span><span class="sr-only">Islandia</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guías (núcleo SEO del index): 1 tarjeta desplegada (2 columnas × 3 filas) + 5 compactas
+         + acceso a todas. Las compactas solo muestran texto: la pregunta y un resumen corto
+         (.read__lede). Al pulsar una se despliega en el sitio de la grande, con su imagen arriba y la
+         respuesta completa (.read__text, 60–120 palabras) sobre el fundido (reads.js anima el cambio).
+         Cada tarjeta: H3 con la pregunta que se busca (enlace a su guía), resumen, respuesta directa
+         en el HTML, tiempo de lectura y revisión. Los href apuntan a las subpáginas por crear.
+         Lo que lleva subrayado discontinuo (.draft) es texto de muestra. -->
+    <section class="reads" id="guias" aria-labelledby="reads-title">
+      <header class="reads__head">
+        <p class="chip">Guías</p>
+        <h2 class="reads__title" id="reads-title">Todo lo que necesitas saber sobre <em>[producto]</em></h2>
+        <p class="reads__lede"><span class="draft">Aquí una línea que presente las guías y cómo se revisan.</span></p>
+      </header>
+
+      <div class="reads__grid" data-reads>
+
+        <!-- Hueco de la desplegada: reads.js mueve aquí la tarjeta que se despliega -->
+        <div class="reads__stage">
+          <article class="read is-featured">
+            <!-- Cerebro de partículas (constellation.js); colores y tamaños: variables --brain-* en styles.css -->
+            <div class="read__media read__media--live">
+              <div class="read__pic">
+                <canvas class="constellation" data-constellation data-live role="img"
+                        aria-label="Un cerebro formado por cientos de piezas que se juntan y se apartan al paso del cursor"></canvas>
+              </div>
+            </div>
+            <div class="read__body">
+              <div class="read__top">
+                <span class="chip read__tag">Fundamentos</span>
+                <span class="read__time">6 min de lectura</span>
+              </div>
+              <h3 class="read__title" tabindex="-1"><a class="read__link" href="guias/que-es/">¿Qué es [producto]?</a></h3>
+              <p class="read__lede"><span class="draft">Qué es [producto], qué contiene, cómo actúa en el cuerpo y cómo se clasifica en Europa.</span></p>
+              <p class="read__text"><span class="draft">Aquí la respuesta directa, de 60 a 120 palabras y en HTML visible. Empieza con una definición de una sola frase que repita la pregunta: «[Producto] es…». Después explica qué contiene, cuál es su principio activo y en qué formato se presenta. Cuenta cómo actúa en el cuerpo con palabras sencillas, sin prometer curas ni resultados. Indica su clasificación en Europa (medicamento, complemento o producto sanitario) y si necesita receta. Usa la palabra clave principal una o dos veces, de forma natural, y mantén frases cortas: es el texto que Google puede mostrar como fragmento destacado. Cierra invitando a leer la guía completa, donde están las fuentes.</span></p>
+              <footer class="read__meta">
+                <p class="read__by"><span class="draft">Revisado por [nombre] · fecha</span></p>
+                <a class="read__more" href="guias/que-es/">
+                  <span>Leer guía completa<span class="sr-only">: ¿Qué es [producto]?</span></span>
+                  <span class="read__more-icon" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span>
+                </a>
+              </footer>
+            </div>
+            <span class="read__go" aria-hidden="true"><i class="ph-light ph-arrow-up-right"></i></span>
+          </article>
+        </div>
+
+        <article class="read">
+          <div class="read__media" style="--focus: 62% 46%">
+            <div class="read__pic">
+              <img src="assets/read-focus.webp" width="1200" height="900" alt="Un cerebro en movimiento que deja una estela al avanzar" loading="lazy" decoding="async">
+              <img class="read__soft" src="assets/read-focus.webp" width="1200" height="900" alt="" loading="lazy" decoding="async">
+            </div>
+          </div>
+          <div class="read__body">
+            <div class="read__top">
+              <span class="chip read__tag">Usos</span>
+              <span class="read__time">7 min de lectura</span>
+            </div>
+            <h3 class="read__title" tabindex="-1"><a class="read__link" href="guias/para-que-se-usa/">¿Para qué se usa [producto]?</a></h3>
+            <p class="read__lede"><span class="draft">Los usos de [producto] respaldados por estudios, los que aún son preliminares y para quién está pensado.</span></p>
+            <p class="read__text"><span class="draft">Aquí la respuesta directa, de 60 a 120 palabras y en HTML visible. Responde en la primera frase con los usos principales, aprobados o estudiados, en una lista breve dentro del texto. Separa con claridad lo que está respaldado por estudios de lo que todavía es preliminar, y deja las citas para la guía completa. Explica para qué persona o situación está pensado y en qué casos no es la opción adecuada. Evita prometer curas, plazos o resultados garantizados. Incluye de forma natural las búsquedas más frecuentes, como «[producto] para…», y termina recomendando consultar a un profesional de la salud antes de empezar.</span></p>
+            <footer class="read__meta">
+              <p class="read__by"><span class="draft">Revisado por [nombre] · fecha</span></p>
+              <a class="read__more" href="guias/para-que-se-usa/">
+                <span>Leer guía completa<span class="sr-only">: ¿Para qué se usa [producto]?</span></span>
+                <span class="read__more-icon" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span>
+              </a>
+            </footer>
+          </div>
+          <span class="read__go" aria-hidden="true"><i class="ph-light ph-arrow-up-right"></i></span>
+        </article>
+
+        <article class="read">
+          <div class="read__media" style="--focus: 62% 40%">
+            <div class="read__pic">
+              <img src="assets/read-rest.webp" width="1200" height="900" alt="Frasco gotero de vidrio ámbar flotando en un cielo suave" loading="lazy" decoding="async">
+              <img class="read__soft" src="assets/read-rest.webp" width="1200" height="900" alt="" loading="lazy" decoding="async">
+            </div>
+          </div>
+          <div class="read__body">
+            <div class="read__top">
+              <span class="chip read__tag">Uso y dosis</span>
+              <span class="read__time">6 min de lectura</span>
+            </div>
+            <h3 class="read__title" tabindex="-1"><a class="read__link" href="guias/como-se-toma/">¿Cómo se toma [producto] y en&nbsp;qué dosis?</a></h3>
+            <p class="read__lede"><span class="draft">La pauta habitual, cómo se ajusta la dosis, qué hacer si olvidas una toma y cuánto tarda en notarse.</span></p>
+            <p class="read__text"><span class="draft">Aquí la respuesta directa, de 60 a 120 palabras y en HTML visible. Empieza con la pauta general tal como figura en el prospecto: cuántas unidades, cada cuánto tiempo y si se toma con o sin comida. Explica si la dosis cambia según la edad o el peso, qué hacer si se olvida una toma y cuál es la dosis máxima diaria. Aclara cuánto puede tardar en notarse el efecto y durante cuánto tiempo es razonable tomarlo. Recuerda que la dosis concreta la indica un médico o un farmacéutico, y remite al prospecto y a la guía completa para los detalles.</span></p>
+            <footer class="read__meta">
+              <p class="read__by"><span class="draft">Revisado por [nombre] · fecha</span></p>
+              <a class="read__more" href="guias/como-se-toma/">
+                <span>Leer guía completa<span class="sr-only">: ¿Cómo se toma [producto] y en qué dosis?</span></span>
+                <span class="read__more-icon" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span>
+              </a>
+            </footer>
+          </div>
+          <span class="read__go" aria-hidden="true"><i class="ph-light ph-arrow-up-right"></i></span>
+        </article>
+
+        <article class="read">
+          <div class="read__media" style="--focus: 42% 50%">
+            <div class="read__pic">
+              <img src="assets/read-calm.webp" width="1200" height="900" alt="Membrana orgánica clara con un foco de color cálido" loading="lazy" decoding="async">
+              <img class="read__soft" src="assets/read-calm.webp" width="1200" height="900" alt="" loading="lazy" decoding="async">
+            </div>
+          </div>
+          <div class="read__body">
+            <div class="read__top">
+              <span class="chip read__tag">Seguridad</span>
+              <span class="read__time">8 min de lectura</span>
+            </div>
+            <h3 class="read__title" tabindex="-1"><a class="read__link" href="guias/efectos-secundarios/">¿Qué efectos secundarios e interacciones tiene?</a></h3>
+            <p class="read__lede"><span class="draft">Los efectos secundarios más frecuentes, las señales de alerta y las interacciones con otros medicamentos.</span></p>
+            <p class="read__text"><span class="draft">Aquí la respuesta directa, de 60 a 120 palabras y en HTML visible. Abre con los efectos secundarios más frecuentes y su intensidad habitual, en lenguaje claro. Después indica los poco frecuentes pero importantes y qué señales obligan a dejar de tomarlo y a consultar. Enumera las interacciones conocidas con medicamentos, alcohol u otros suplementos, y explica por qué importan. Mantén un tono neutral y basado en datos, con las fuentes en la guía completa. Termina recordando que cualquier efecto adverso se puede notificar al sistema de farmacovigilancia de cada país y que, ante la duda, conviene preguntar al médico o al farmacéutico.</span></p>
+            <footer class="read__meta">
+              <p class="read__by"><span class="draft">Revisado por [nombre] · fecha</span></p>
+              <a class="read__more" href="guias/efectos-secundarios/">
+                <span>Leer guía completa<span class="sr-only">: ¿Qué efectos secundarios e interacciones tiene [producto]?</span></span>
+                <span class="read__more-icon" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span>
+              </a>
+            </footer>
+          </div>
+          <span class="read__go" aria-hidden="true"><i class="ph-light ph-arrow-up-right"></i></span>
+        </article>
+
+        <article class="read">
+          <div class="read__media" style="--focus: 50% 44%">
+            <div class="read__pic">
+              <img src="assets/read-shield.webp" width="1200" height="900" alt="Un cerebro protegido dentro de un escudo de púas" loading="lazy" decoding="async">
+              <img class="read__soft" src="assets/read-shield.webp" width="1200" height="900" alt="" loading="lazy" decoding="async">
+            </div>
+          </div>
+          <div class="read__body">
+            <div class="read__top">
+              <span class="chip read__tag">Seguridad</span>
+              <span class="read__time">5 min de lectura</span>
+            </div>
+            <h3 class="read__title" tabindex="-1"><a class="read__link" href="guias/quien-no-deberia-usarlo/">¿Quién no debería usar [producto]?</a></h3>
+            <p class="read__lede"><span class="draft">Contraindicaciones, embarazo y lactancia, y en qué casos conviene consultar antes de tomarlo.</span></p>
+            <p class="read__text"><span class="draft">Aquí la respuesta directa, de 60 a 120 palabras y en HTML visible. Empieza con las contraindicaciones claras según la ficha oficial: alergia a algún componente, embarazo y lactancia, menores de cierta edad o enfermedades concretas. Después menciona quién debe consultar antes de tomarlo, como personas mayores, con enfermedades crónicas o que toman otros medicamentos. Explica en una frase el motivo de cada precaución, sin alarmar. Añade que esta información no sustituye una consulta médica y remite a la guía completa, donde cada caso se desarrolla con sus fuentes. Usa frases cortas para que se lea rápido.</span></p>
+            <footer class="read__meta">
+              <p class="read__by"><span class="draft">Revisado por [nombre] · fecha</span></p>
+              <a class="read__more" href="guias/quien-no-deberia-usarlo/">
+                <span>Leer guía completa<span class="sr-only">: ¿Quién no debería usar [producto]?</span></span>
+                <span class="read__more-icon" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span>
+              </a>
+            </footer>
+          </div>
+          <span class="read__go" aria-hidden="true"><i class="ph-light ph-arrow-up-right"></i></span>
+        </article>
+
+        <article class="read">
+          <div class="read__media" style="--focus: 52% 40%">
+            <div class="read__pic">
+              <img src="assets/read-myths.webp" width="1200" height="900" alt="Blíster de comprimidos sobre un fondo claro" loading="lazy" decoding="async">
+              <img class="read__soft" src="assets/read-myths.webp" width="1200" height="900" alt="" loading="lazy" decoding="async">
+            </div>
+          </div>
+          <div class="read__body">
+            <div class="read__top">
+              <span class="chip read__tag">Mitos</span>
+              <span class="read__time">6 min de lectura</span>
+            </div>
+            <h3 class="read__title" tabindex="-1"><a class="read__link" href="guias/mitos-y-verdades/">Mitos y verdades sobre [producto]</a></h3>
+            <p class="read__lede"><span class="draft">Los mitos más repetidos sobre [producto], contrastados uno a uno con fuentes fiables.</span></p>
+            <p class="read__text"><span class="draft">Aquí la respuesta directa, de 60 a 120 palabras y en HTML visible. Recoge los tres o cuatro mitos más repetidos sobre [producto] y responde a cada uno con una frase clara: mito o verdad, y por qué. Elige los que la gente busca de verdad; puedes verlos en «Otras preguntas de los usuarios» de Google. Apoya cada respuesta en una fuente fiable, citada en la guía completa. Mantén un tono cercano y sin burlas, porque quien pregunta suele tener una duda legítima. Termina con una idea práctica: dónde comprobar la información oficial y cuándo conviene preguntar a un profesional antes de decidir.</span></p>
+            <footer class="read__meta">
+              <p class="read__by"><span class="draft">Revisado por [nombre] · fecha</span></p>
+              <a class="read__more" href="guias/mitos-y-verdades/">
+                <span>Leer guía completa<span class="sr-only">: Mitos y verdades sobre [producto]</span></span>
+                <span class="read__more-icon" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span>
+              </a>
+            </footer>
+          </div>
+          <span class="read__go" aria-hidden="true"><i class="ph-light ph-arrow-up-right"></i></span>
+        </article>
+
+        <a class="reads__all" href="guias/">
+          <span class="reads__all-label">Ver todas las guías</span>
+          <i class="ph-light ph-arrow-right" aria-hidden="true"></i>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- A quién va dirigido (diseño de Stitch, proyecto "New store"): carrusel de perfiles con las
+         tarjetas apiladas: la actual delante y la anterior y la siguiente asomando detrás. Al pasar,
+         giran como en un carrusel circular (audience.js): flechas, puntos, teclado, arrastre o un
+         clic en la tarjeta de detrás. Cifras clínicas, mecanismos de acción y certificaciones van
+         como texto de muestra (.draft): solo pueden publicarse si los respalda la ficha oficial. -->
+    <section class="aud" id="perfiles" aria-labelledby="aud-title">
+      <header class="aud__head">
+        <p class="chip chip--dot">Indicaciones terapéuticas</p>
+        <h2 class="aud__title" id="aud-title">A quién va <em>dirigido</em></h2>
+        <p class="aud__lede"><span class="draft">Aquí una línea sobre los perfiles a los que se dirigen los productos, según su ficha oficial.</span></p>
+        <ul class="aud__specs" aria-label="Datos del producto">
+          <li><span class="draft">Aquí la pureza</span></li>
+          <li><span class="draft">Aquí el principio activo</span></li>
+          <li><span class="draft">Aquí el grado</span></li>
+        </ul>
+      </header>
+
+      <div class="aud__carousel" role="region" aria-roledescription="carrusel" aria-label="Perfiles" data-aud>
+        <div class="aud__deck">
+          <article class="acard is-active" role="group" aria-roledescription="diapositiva" aria-label="1 de 6" data-index="0">
+            <figure class="acard__media">
+              <img src="assets/aud-focus.webp" width="800" height="800" alt="Busto de escultura blanca con un anillo de luz alrededor de la frente, en un laboratorio" loading="lazy" decoding="async">
+              <figcaption class="acard__fig">Fig. 01 · Soma</figcaption>
+            </figure>
+            <div class="acard__body">
+              <div class="acard__top">
+                <p class="acard__area">Perfil 01 · Neuro-regulación</p>
+                <p class="acard__ref"><i class="ph-light ph-microscope" aria-hidden="true"></i><span class="draft">Ref. XXX</span></p>
+              </div>
+              <h3 class="acard__title">Estrés crónico, sobrecarga cognitiva y dispersión mental</h3>
+              <p class="acard__text"><span class="draft">Aquí para quién está pensado este perfil y qué dice la ficha oficial del producto, sin prometer resultados.</span></p>
+              <a class="acard__link" href="perfiles/neuro-regulacion/">Explorar protocolo clínico<span class="sr-only">: Neuro-regulación</span> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+              <dl class="acard__stats">
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX</span></dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="acard" role="group" aria-roledescription="diapositiva" aria-label="2 de 6" data-index="1">
+            <figure class="acard__media">
+              <img src="assets/aud-sleep.webp" width="800" height="800" alt="Figura blanca flotando en postura de descanso, con puntos de luz a lo largo del cuerpo" loading="lazy" decoding="async">
+              <figcaption class="acard__fig">Fig. 02 · Hypnos</figcaption>
+            </figure>
+            <div class="acard__body">
+              <div class="acard__top">
+                <p class="acard__area">Perfil 02 · Cronobiología y sueño</p>
+                <p class="acard__ref"><i class="ph-light ph-moon-stars" aria-hidden="true"></i><span class="draft">Ref. XXX</span></p>
+              </div>
+              <h3 class="acard__title">Insomnio de conciliación y fragmentación del sueño profundo</h3>
+              <p class="acard__text"><span class="draft">Aquí para quién está pensado este perfil y qué dice la ficha oficial del producto, sin prometer resultados.</span></p>
+              <a class="acard__link" href="perfiles/cronobiologia-y-sueno/">Explorar protocolo clínico<span class="sr-only">: Cronobiología y sueño</span> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+              <dl class="acard__stats">
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX</span></dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="acard" role="group" aria-roledescription="diapositiva" aria-label="3 de 6" data-index="2">
+            <figure class="acard__media">
+              <img src="assets/aud-helix.webp" width="800" height="800" alt="Escultura blanca de una doble hélice entrelazada con nervaduras de hoja" loading="lazy" decoding="async">
+              <figcaption class="acard__fig">Fig. 03 · Cinética</figcaption>
+            </figure>
+            <div class="acard__body">
+              <div class="acard__top">
+                <p class="acard__area">Perfil 03 · Modulación inflamatoria</p>
+                <p class="acard__ref"><i class="ph-light ph-heartbeat" aria-hidden="true"></i><span class="draft">Ref. XXX</span></p>
+              </div>
+              <h3 class="acard__title">Dolor osteoarticular, rigidez matutina y tensión muscular</h3>
+              <p class="acard__text"><span class="draft">Aquí para quién está pensado este perfil y qué dice la ficha oficial del producto, sin prometer resultados.</span></p>
+              <a class="acard__link" href="perfiles/modulacion-inflamatoria/">Explorar protocolo clínico<span class="sr-only">: Modulación inflamatoria</span> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+              <dl class="acard__stats">
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX</span></dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="acard" role="group" aria-roledescription="diapositiva" aria-label="4 de 6" data-index="3">
+            <figure class="acard__media">
+              <img src="assets/read-shield.webp" width="1200" height="900" alt="Un cerebro blanco protegido dentro de un escudo de púas" loading="lazy" decoding="async">
+              <figcaption class="acard__fig">Fig. 04 · Égida</figcaption>
+            </figure>
+            <div class="acard__body">
+              <div class="acard__top">
+                <p class="acard__area">Perfil 04 · <span class="draft">Aquí el área</span></p>
+                <p class="acard__ref"><i class="ph-light ph-shield-check" aria-hidden="true"></i><span class="draft">Ref. XXX</span></p>
+              </div>
+              <h3 class="acard__title"><span class="draft">Aquí el perfil al que va dirigido</span></h3>
+              <p class="acard__text"><span class="draft">Aquí para quién está pensado este perfil y qué dice la ficha oficial del producto, sin prometer resultados.</span></p>
+              <a class="acard__link" href="perfiles/perfil-4/">Explorar protocolo clínico<span class="sr-only">: perfil 4</span> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+              <dl class="acard__stats">
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX</span></dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="acard" role="group" aria-roledescription="diapositiva" aria-label="5 de 6" data-index="4">
+            <figure class="acard__media">
+              <img src="assets/read-focus.webp" width="1200" height="900" alt="Un cerebro blanco en movimiento que deja una estela al avanzar" loading="lazy" decoding="async">
+              <figcaption class="acard__fig">Fig. 05 · Impulso</figcaption>
+            </figure>
+            <div class="acard__body">
+              <div class="acard__top">
+                <p class="acard__area">Perfil 05 · <span class="draft">Aquí el área</span></p>
+                <p class="acard__ref"><i class="ph-light ph-lightning" aria-hidden="true"></i><span class="draft">Ref. XXX</span></p>
+              </div>
+              <h3 class="acard__title"><span class="draft">Aquí el perfil al que va dirigido</span></h3>
+              <p class="acard__text"><span class="draft">Aquí para quién está pensado este perfil y qué dice la ficha oficial del producto, sin prometer resultados.</span></p>
+              <a class="acard__link" href="perfiles/perfil-5/">Explorar protocolo clínico<span class="sr-only">: perfil 5</span> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+              <dl class="acard__stats">
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX</span></dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="acard" role="group" aria-roledescription="diapositiva" aria-label="6 de 6" data-index="5">
+            <figure class="acard__media">
+              <img src="assets/aud-psique.webp" width="800" height="800" alt="Escultura de un cerebro de porcelana blanca sobre fondo claro" loading="lazy" decoding="async">
+              <figcaption class="acard__fig">Fig. 06 · Psique</figcaption>
+            </figure>
+            <div class="acard__body">
+              <div class="acard__top">
+                <p class="acard__area">Perfil 06 · <span class="draft">Aquí el área</span></p>
+                <p class="acard__ref"><i class="ph-light ph-brain" aria-hidden="true"></i><span class="draft">Ref. XXX</span></p>
+              </div>
+              <h3 class="acard__title"><span class="draft">Aquí el perfil al que va dirigido</span></h3>
+              <p class="acard__text"><span class="draft">Aquí para quién está pensado este perfil y qué dice la ficha oficial del producto, sin prometer resultados.</span></p>
+              <a class="acard__link" href="perfiles/perfil-6/">Explorar protocolo clínico<span class="sr-only">: perfil 6</span> <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+              <dl class="acard__stats">
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX %</span></dd></div>
+                <div><dt><span class="draft">Aquí qué mide</span></dt><dd><span class="draft">XX</span></dd></div>
+              </dl>
+            </div>
+          </article>
+          <button class="aud__arrow aud__arrow--prev" type="button" aria-label="Perfil anterior" data-step="-1"><i class="ph ph-caret-left" aria-hidden="true"></i></button>
+          <button class="aud__arrow aud__arrow--next" type="button" aria-label="Perfil siguiente" data-step="1"><i class="ph ph-caret-right" aria-hidden="true"></i></button>
+        </div>
+        <div class="aud__dots">
+          <button class="aud__dot is-active" type="button" aria-label="Perfil 1: Neuro-regulación" aria-current="true" data-go="0"></button>
+          <button class="aud__dot" type="button" aria-label="Perfil 2: Cronobiología y sueño" data-go="1"></button>
+          <button class="aud__dot" type="button" aria-label="Perfil 3: Modulación inflamatoria" data-go="2"></button>
+          <button class="aud__dot" type="button" aria-label="Perfil 4" data-go="3"></button>
+          <button class="aud__dot" type="button" aria-label="Perfil 5" data-go="4"></button>
+          <button class="aud__dot" type="button" aria-label="Perfil 6" data-go="5"></button>
+        </div>
+        <p class="sr-only" aria-live="polite" data-aud-status></p>
+      </div>
+
+      <div class="aud__foot">
+        <a class="aud__cta" href="#comparar">
+          <span>Descubrir mi formulación adecuada</span>
+          <span class="aud__cta-icon" aria-hidden="true"><i class="ph ph-arrow-right"></i></span>
+        </a>
+        <p class="aud__legal"><i class="ph-light ph-shield-check" aria-hidden="true"></i><span class="draft">Aquí quién supervisa estos perfiles y con qué fuentes.</span></p>
+      </div>
+    </section>
+
+    <!-- Estudios e información científica (diseño de Stitch, proyecto "New store"): encabezado con
+         los sellos de verificación y un catálogo de 6 fichas de estudio. Todo lo de cada ficha
+         (revista, título, autores, resumen, DOI, PMID, registro) es texto de muestra (.draft): en
+         Stitch venía inventado, así que cada ficha debe sustituirse por un estudio real y su DOI o
+         PMID comprobado antes de publicar. Los enlaces apuntan a la subpágina de evidencia por
+         crear; cuando haya estudios reales, cada uno enlazará a su fuente (PubMed, DOI…).
+         evidence.js solo anima la entrada. (El fondo animado de puntos de dna.js ya no está en esta
+         página: solo en la subpágina adn/.) -->
+    <section class="evid" id="estudios" aria-labelledby="evid-title">
+      <header class="evid__head">
+        <p class="chip evid__eyebrow"><i class="ph ph-flask" aria-hidden="true"></i>Evidencia y rigor clínico</p>
+        <h2 class="evid__title" id="evid-title">Estudios e información <em>científica</em> estandarizada</h2>
+        <p class="evid__lede"><span class="draft">Base documental de acceso abierto con publicaciones revisadas por pares, ensayos clínicos registrados y monografías sobre fitocannabinoides, sus receptores y el equilibrio del organismo.</span></p>
+        <ul class="evid__seals" aria-label="Criterios de las fuentes">
+          <li><i class="ph ph-seal-check" aria-hidden="true"></i><span class="draft">Indexación PubMed / MEDLINE</span></li>
+          <li><i class="ph ph-clipboard-text" aria-hidden="true"></i><span class="draft">Registro ClinicalTrials.gov</span></li>
+          <li><i class="ph ph-scales" aria-hidden="true"></i><span class="draft">Ensayos doble ciego (ECA)</span></li>
+          <li><i class="ph ph-link-simple" aria-hidden="true"></i><span class="draft">DOI verificado en Crossref</span></li>
+        </ul>
+      </header>
+
+      <div class="evid__bar">
+        <div>
+          <p class="evid__kicker">Catálogo indexado</p>
+          <h3 class="evid__sub">Monografías de referencia <em>clínica</em></h3>
+        </div>
+        <p class="evid__note"><span class="draft">Estudios con rigor metodológico aprobados por comités de ética independientes. Se revisan periódicamente en los indexadores biomédicos.</span></p>
+      </div>
+
+      <div class="evid__grid" data-evid>
+        <article class="paper">
+          <div class="paper__body">
+            <div class="paper__top">
+              <span class="paper__tag">Neurología y sueño</span>
+              <span class="paper__year"><span class="draft">2023</span></span>
+            </div>
+            <p class="paper__source"><span class="draft">Revista: aquí la revista</span></p>
+            <h4 class="paper__title"><span class="draft">Interacción de formulaciones botánicas ricas en terpenos y receptores CB1/CB2 en la latencia del sueño profundo.</span></h4>
+            <p class="paper__text"><span class="draft">Autores e institución. Resumen de una o dos frases: diseño del estudio, número de participantes y qué se midió.</span></p>
+          </div>
+          <footer class="paper__ref">
+            <dl class="paper__ids">
+              <div><dt>DOI</dt><dd><span class="draft">10.xxxx/xxxxx</span></dd></div>
+              <div><dt>PMID</dt><dd><span class="draft">XXXXXXXX</span></dd></div>
+            </dl>
+            <a class="paper__link" href="evidencia/">
+              <span>Ver estudio en PubMed<span class="sr-only">: neurología y sueño</span></span>
+              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          </footer>
+        </article>
+
+        <article class="paper">
+          <div class="paper__body">
+            <div class="paper__top">
+              <span class="paper__tag">Farmacocinética</span>
+              <span class="paper__year"><span class="draft">2023</span></span>
+            </div>
+            <p class="paper__source"><span class="draft">Revista: aquí la revista</span></p>
+            <h4 class="paper__title"><span class="draft">Biodisponibilidad y farmacocinética de tinturas oleosas purificadas frente a extractos crudos.</span></h4>
+            <p class="paper__text"><span class="draft">Autores e institución. Resumen: qué se comparó (por ejemplo, absorción sublingual con aceite MCT) y el resultado principal con su cifra.</span></p>
+          </div>
+          <footer class="paper__ref">
+            <dl class="paper__ids">
+              <div><dt>DOI</dt><dd><span class="draft">10.xxxx/xxxxx</span></dd></div>
+              <div><dt>PMID</dt><dd><span class="draft">XXXXXXXX</span></dd></div>
+            </dl>
+            <a class="paper__link" href="evidencia/">
+              <span>Ver ficha en la revista<span class="sr-only">: farmacocinética</span></span>
+              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          </footer>
+        </article>
+
+        <article class="paper">
+          <div class="paper__body">
+            <div class="paper__top">
+              <span class="paper__tag">Antiinflamatorio</span>
+              <span class="paper__year"><span class="draft">2022</span></span>
+            </div>
+            <p class="paper__source"><span class="draft">Revista: aquí la revista</span></p>
+            <h4 class="paper__title"><span class="draft">Efecto de cannabinoides no psicotrópicos sobre citoquinas proinflamatorias (IL-6, TNF-α).</span></h4>
+            <p class="paper__text"><span class="draft">Autores e institución. Resumen: tipo de estudio (en humanos, animales o in vitro), qué mecanismo se observó y en qué condiciones.</span></p>
+          </div>
+          <footer class="paper__ref">
+            <dl class="paper__ids">
+              <div><dt>DOI</dt><dd><span class="draft">10.xxxx/xxxxx</span></dd></div>
+              <div><dt>PMID</dt><dd><span class="draft">XXXXXXXX</span></dd></div>
+            </dl>
+            <a class="paper__link" href="evidencia/">
+              <span>Consultar en NCBI<span class="sr-only">: antiinflamatorio</span></span>
+              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          </footer>
+        </article>
+
+        <article class="paper">
+          <div class="paper__body">
+            <div class="paper__top">
+              <span class="paper__tag">Seguridad y metabolismo</span>
+              <span class="paper__year"><span class="draft">2023</span></span>
+            </div>
+            <p class="paper__source"><span class="draft">Revista: aquí la revista</span></p>
+            <h4 class="paper__title"><span class="draft">Seguridad hepática e interacciones con las enzimas del citocromo P450 a dosis habituales.</span></h4>
+            <p class="paper__text"><span class="draft">Autores e institución. Resumen: duración del seguimiento, enzimas estudiadas (CYP3A4, CYP2C19) y qué interacciones conviene vigilar.</span></p>
+          </div>
+          <footer class="paper__ref">
+            <dl class="paper__ids">
+              <div><dt>DOI</dt><dd><span class="draft">10.xxxx/xxxxx</span></dd></div>
+              <div><dt>PMID</dt><dd><span class="draft">XXXXXXXX</span></dd></div>
+            </dl>
+            <a class="paper__link" href="evidencia/">
+              <span>Ver en ScienceDirect<span class="sr-only">: seguridad y metabolismo</span></span>
+              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          </footer>
+        </article>
+
+        <article class="paper">
+          <div class="paper__body">
+            <div class="paper__top">
+              <span class="paper__tag">Homeostasis celular</span>
+              <span class="paper__year"><span class="draft">2024</span></span>
+            </div>
+            <p class="paper__source"><span class="draft">Revista: aquí la revista</span></p>
+            <h4 class="paper__title"><span class="draft">Tono endocannabinoide en situaciones de fatiga y estrés laboral mantenido.</span></h4>
+            <p class="paper__text"><span class="draft">Autores e institución. Resumen: qué se midió en sangre (anandamida, 2-AG) y qué relación se encontró con el estrés.</span></p>
+          </div>
+          <footer class="paper__ref">
+            <dl class="paper__ids">
+              <div><dt>DOI</dt><dd><span class="draft">10.xxxx/xxxxx</span></dd></div>
+              <div><dt>PMID</dt><dd><span class="draft">XXXXXXXX</span></dd></div>
+            </dl>
+            <a class="paper__link" href="evidencia/">
+              <span>Leer el estudio abierto<span class="sr-only">: homeostasis celular</span></span>
+              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          </footer>
+        </article>
+
+        <article class="paper paper--trial">
+          <div class="paper__body">
+            <div class="paper__top">
+              <span class="paper__tag">Ensayo clínico en curso</span>
+              <span class="paper__live"><span class="paper__pulse" aria-hidden="true"></span><span class="draft">Activo</span></span>
+            </div>
+            <p class="paper__source"><span class="draft">Registro: ClinicalTrials.gov</span></p>
+            <h4 class="paper__title"><span class="draft">Eficacia en personas con ansiedad e insomnio (fase III).</span></h4>
+            <p class="paper__text"><span class="draft">Diseño del ensayo, duración del seguimiento y qué se evalúa (por ejemplo, tiempo hasta dormirse y calidad del despertar).</span></p>
+          </div>
+          <footer class="paper__ref">
+            <dl class="paper__ids">
+              <div><dt>Registro</dt><dd><span class="draft">NCTXXXXXXXX</span></dd></div>
+              <div><dt>Estado</dt><dd><span class="draft">Aquí el estado · fase</span></dd></div>
+            </dl>
+            <a class="paper__link" href="evidencia/">
+              <span>Consultar el protocolo<span class="sr-only">: ensayo clínico en curso</span></span>
+              <i class="ph ph-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- Preguntas frecuentes: acordeón (faq.js). Cada pregunta es un botón que despliega su
+         respuesta: el panel se abre en blanco con un borde irisado y el + gira hasta ser una ×. Solo
+         hay una abierta a la vez y la primera empieza abierta. Las respuestas están en el HTML
+         aunque estén plegadas (y sin JS se ven todas). Lo que falta por confirmar va como texto de
+         muestra (.draft). -->
+    <section class="faq" id="preguntas" aria-labelledby="faq-title">
+      <header class="faq__head">
+        <p class="chip chip--dot">FAQ</p>
+        <h2 class="faq__title" id="faq-title">Preguntas <em>frecuentes</em></h2>
+      </header>
+
+      <div class="faq__list" data-faq>
+        <div class="faq__item is-open">
+          <h3 class="faq__q">
+            <button class="faq__btn" type="button" id="faq-q1" aria-expanded="true" aria-controls="faq-a1">
+              <span class="faq__n" aria-hidden="true">1</span>
+              <span class="faq__text">¿Cuándo pago mi pedido?</span>
+              <span class="faq__icon" aria-hidden="true"><i class="ph ph-plus"></i></span>
+            </button>
+          </h3>
+          <div class="faq__panel" id="faq-a1" role="region" aria-labelledby="faq-q1">
+            <div class="faq__clip">
+              <div class="faq__body">
+                  <p>Cuando lo recibes: no pagas nada por adelantado.</p>
+                  <p><span class="draft">Aquí los métodos que acepta el transportista en la puerta (efectivo, tarjeta, móvil).</span></p>
+                  <p><a href="#pedido">Cómo funciona tu pedido, paso a paso</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">
+            <button class="faq__btn" type="button" id="faq-q2" aria-expanded="false" aria-controls="faq-a2">
+              <span class="faq__n" aria-hidden="true">2</span>
+              <span class="faq__text">¿Cuánto tarda la entrega?</span>
+              <span class="faq__icon" aria-hidden="true"><i class="ph ph-plus"></i></span>
+            </button>
+          </h3>
+          <div class="faq__panel" id="faq-a2" role="region" aria-labelledby="faq-q2">
+            <div class="faq__clip">
+              <div class="faq__body">
+                  <p>Entre 3 y 7 días laborables, con seguimiento del envío.</p>
+                  <p><span class="draft">Aquí los plazos por país, si cambian, y cuándo recibes el número de seguimiento.</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">
+            <button class="faq__btn" type="button" id="faq-q3" aria-expanded="false" aria-controls="faq-a3">
+              <span class="faq__n" aria-hidden="true">3</span>
+              <span class="faq__text">¿A qué países enviáis?</span>
+              <span class="faq__icon" aria-hidden="true"><i class="ph ph-plus"></i></span>
+            </button>
+          </h3>
+          <div class="faq__panel" id="faq-a3" role="region" aria-labelledby="faq-q3">
+            <div class="faq__clip">
+              <div class="faq__body">
+                  <p>A toda la Unión Europea desde nuestro almacén en la UE, y a Reino Unido, Suiza, Noruega e Islandia.</p>
+                  <p>Fuera de la UE el envío puede pasar aduana. <a href="#envios">Ver zonas de envío</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">
+            <button class="faq__btn" type="button" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">
+              <span class="faq__n" aria-hidden="true">4</span>
+              <span class="faq__text">¿Cuánto cuesta el envío?</span>
+              <span class="faq__icon" aria-hidden="true"><i class="ph ph-plus"></i></span>
+            </button>
+          </h3>
+          <div class="faq__panel" id="faq-a4" role="region" aria-labelledby="faq-q4">
+            <div class="faq__clip">
+              <div class="faq__body">
+                  <p>Es gratis a partir de 150&nbsp;€.</p>
+                  <p><span class="draft">Aquí el coste del envío por debajo de esa cifra.</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">
+            <button class="faq__btn" type="button" id="faq-q5" aria-expanded="false" aria-controls="faq-a5">
+              <span class="faq__n" aria-hidden="true">5</span>
+              <span class="faq__text">¿Qué pasa si no estoy en casa cuando llega?</span>
+              <span class="faq__icon" aria-hidden="true"><i class="ph ph-plus"></i></span>
+            </button>
+          </h3>
+          <div class="faq__panel" id="faq-a5" role="region" aria-labelledby="faq-q5">
+            <div class="faq__clip">
+              <div class="faq__body">
+                  <p><span class="draft">Aquí cuántos intentos de entrega hace el transportista y cómo reprogramarla.</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">
+            <button class="faq__btn" type="button" id="faq-q6" aria-expanded="false" aria-controls="faq-a6">
+              <span class="faq__n" aria-hidden="true">6</span>
+              <span class="faq__text">¿Puedo devolver un pedido?</span>
+              <span class="faq__icon" aria-hidden="true"><i class="ph ph-plus"></i></span>
+            </button>
+          </h3>
+          <div class="faq__panel" id="faq-a6" role="region" aria-labelledby="faq-q6">
+            <div class="faq__clip">
+              <div class="faq__body">
+                  <p>Sí: tienes 14 días para desistir de una compra a distancia.</p>
+                  <p><span class="draft">Aquí cómo ejercerlo y las excepciones por motivos de salud o higiene.</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">
+            <button class="faq__btn" type="button" id="faq-q7" aria-expanded="false" aria-controls="faq-a7">
+              <span class="faq__n" aria-hidden="true">7</span>
+              <span class="faq__text">¿Puedo tomarlo con otros medicamentos?</span>
+              <span class="faq__icon" aria-hidden="true"><i class="ph ph-plus"></i></span>
+            </button>
+          </h3>
+          <div class="faq__panel" id="faq-a7" role="region" aria-labelledby="faq-q7">
+            <div class="faq__clip">
+              <div class="faq__body">
+                  <p>Consulta antes a tu médico o farmacéutico.</p>
+                  <p><span class="draft">Aquí un resumen de las interacciones según la ficha oficial.</span></p>
+                  <p><a href="guias/efectos-secundarios/">Efectos secundarios e interacciones</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="faq__item">
+          <h3 class="faq__q">
+            <button class="faq__btn" type="button" id="faq-q8" aria-expanded="false" aria-controls="faq-a8">
+              <span class="faq__n" aria-hidden="true">8</span>
+              <span class="faq__text">¿Necesito receta?</span>
+              <span class="faq__icon" aria-hidden="true"><i class="ph ph-plus"></i></span>
+            </button>
+          </h3>
+          <div class="faq__panel" id="faq-a8" role="region" aria-labelledby="faq-q8">
+            <div class="faq__clip">
+              <div class="faq__body">
+                  <p><span class="draft">Aquí si requiere receta según la clasificación del producto y el país de entrega.</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acceso a la página con todas las preguntas: una fila más del acordeón, en negro -->
+      <a class="faq__all" href="preguntas-frecuentes/">
+        <span class="faq__all-icon" aria-hidden="true"><i class="ph ph-list-bullets"></i></span>
+        <span class="faq__all-text">
+          <span class="faq__all-title">Ver todas las preguntas frecuentes</span>
+          <span class="faq__all-sub">Pedido y pago · Envío y entrega · Devoluciones · Producto y uso</span>
+        </span>
+        <span class="faq__all-go" aria-hidden="true"><i class="ph ph-arrow-right"></i></span>
+      </a>
+
+      <p class="faq__more">¿Tienes otra pregunta? <a href="contacto/">Escríbenos <i class="ph ph-chat-circle" aria-hidden="true"></i></a></p>
+    </section>
+  </main>
+
+  <!-- Pie de página: el mismo que el de las subpáginas. Lo escribe "node build.mjs" entre estas
+       dos marcas a partir de _src/layout.mjs (footer): edítalo allí, no aquí. Estilos en site.css. -->
+  <!-- pie:inicio -->
+  <footer class="foot">
+    <div class="foot__in">
+      <div class="foot__brand">
+        <a class="brand foot__logo" href="./" aria-label="Brand, inicio"><svg class="brand__mark" viewBox="-50 -50 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(0)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(15)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(30)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(45)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(60)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(75)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(90)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(105)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(120)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(135)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(150)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(165)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(180)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(195)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(210)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(225)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(240)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(255)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(270)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(285)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(300)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(315)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(330)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(345)"/></g><circle r="5.5" fill="currentColor"/></svg><span translate="no">Brand</span></a>
+        <p class="foot__claim">El escudo que necesitas <span>para dar lo mejor de ti</span></p>
+        <ul class="foot__pledges">
+          <li><i class="ph-light ph-hand-coins" aria-hidden="true"></i>Pagas al recibirlo</li>
+          <li><i class="ph-light ph-package" aria-hidden="true"></i>Envío discreto</li>
+          <li><i class="ph-light ph-arrow-u-up-left" aria-hidden="true"></i>14 días para desistir</li>
+        </ul>
+      </div>
+      <nav class="foot__nav" aria-label="Pie de página">
+        
+      <div class="foot__col">
+        <p class="foot__h">Tienda</p>
+        <ul><li><a href="productos/">Todos los productos</a></li><li><a href="productos/producto-1/">Producto 1</a></li><li><a href="productos/producto-2/">Producto 2</a></li><li><a href="productos/producto-3/">Producto 3</a></li><li><a href="productos/producto-4/">Producto 4</a></li><li><a href="#comparar">Comparar</a></li><li><a href="carrito/">Carrito</a></li></ul>
+      </div>
+        
+      <div class="foot__col">
+        <p class="foot__h">Información</p>
+        <ul><li><a href="guias/">Guías</a></li><li><a href="evidencia/">Estudios</a></li><li><a href="#perfiles">A quién va dirigido</a></li><li><a href="#pedido">Cómo funciona tu pedido</a></li></ul>
+      </div>
+        
+      <div class="foot__col">
+        <p class="foot__h">Ayuda</p>
+        <ul><li><a href="preguntas-frecuentes/">Preguntas frecuentes</a></li><li><a href="envios/">Envíos y plazos</a></li><li><a href="devoluciones/">Devoluciones</a></li><li><a href="cuenta/">Consultar mi pedido</a></li><li><a href="contacto/">Contacto</a></li></ul>
+      </div>
+        
+      <div class="foot__col">
+        <p class="foot__h">Legal</p>
+        <ul><li><a href="aviso-legal/">Aviso legal</a></li><li><a href="privacidad/">Privacidad</a></li><li><a href="cookies/">Cookies</a></li><li><a href="terminos/">Términos de venta</a></li></ul>
+      </div>
+      </nav>
+    </div>
+    <div class="foot__base">
+      <p>© 2026 <span translate="no">Brand</span> · La información de este sitio es educativa y no sustituye el consejo de un profesional sanitario.</p>
+      <p><span class="draft">Aquí la razón social, el NIF y la dirección del titular</span></p>
+    </div>
+  </footer>
+  <!-- pie:fin -->
+
+  <script src="catalog.js?v=1" defer></script>
+  <script src="store.js?v=1" defer></script>
+
+  <script src="shield.js" defer></script>
+  <script src="orbit.js" defer></script>
+  <script src="runner.js?v=2" defer></script>
+  <script src="brain-points.js" defer></script>
+  <script src="constellation.js?v=2" defer></script>
+  <script src="compare.js" defer></script>
+  <script src="order.js?v=3" defer></script>
+  <script src="reads.js?v=4" defer></script>
+  <script src="audience.js?v=2" defer></script>
+  <script src="evidence.js" defer></script>
+  <script src="faq.js?v=2" defer></script>
+  <script>
+    // Lupa: acerca / aleja el frasco
+    document.querySelector('[data-zoom]').addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      const on = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(on));
+      btn.closest('.product').classList.toggle('is-zoomed', on);
+    });
+  </script>
+</body>
+</html>
