@@ -1,32 +1,11 @@
-/* Subpáginas: menú del móvil, acordeones, índice lateral que marca la sección visible, galería de
-   la ficha, barra de compra del móvil, filtros, buscador de preguntas y entrada al hacer scroll.
-   Sin JS todo se ve y funciona como enlaces normales. */
+/* Subpáginas: acordeones, índice lateral que marca la sección visible, galería de la ficha, barra
+   de compra del móvil, filtros, buscador de preguntas y entrada al hacer scroll. La barra superior
+   va en nav.js. Sin JS todo se ve y funciona como enlaces normales. */
 (() => {
   'use strict';
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
-
-  /* ---------- Menú del móvil ---------- */
-
-  const bar = document.querySelector('[data-topbar]');
-  const menuBtn = bar?.querySelector('.topbar__menu');
-  if (bar && menuBtn) {
-    const set = (open) => {
-      bar.classList.toggle('is-open', open);
-      menuBtn.setAttribute('aria-expanded', String(open));
-      menuBtn.querySelector('i').className = `ph ${open ? 'ph-x' : 'ph-list'}`;
-    };
-    menuBtn.addEventListener('click', () => set(!bar.classList.contains('is-open')));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && bar.classList.contains('is-open')) {
-        set(false);
-        menuBtn.focus();
-      }
-    });
-    document.addEventListener('click', (e) => { if (!bar.contains(e.target)) set(false); });
-    window.matchMedia('(min-width: 901px)').addEventListener('change', () => set(false));
-  }
 
   /* ---------- Acordeones (mismo comportamiento que las FAQ del index) ---------- */
 

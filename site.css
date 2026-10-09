@@ -20,9 +20,13 @@
     0 2px 4px rgb(13 13 13 / 0.05),
     0 28px 48px -20px rgb(13 13 13 / 0.3);
   --iris: linear-gradient(115deg, #f2c6e3, #d2cbff 30%, #bde2ff 56%, #c9eedb 78%, #ffe1b6);
-  --bar-h: 72px;
-  --stick: calc(var(--pad-frame) * 2 + var(--bar-h) + 12px);   /* debajo de la barra fija */
+  --bar-h: 68px;
+  --nav-h: calc(var(--pad-frame) * 2 + var(--bar-h));        /* lo que ocupa la barra fija */
+  --stick: calc(var(--nav-h) + 12px);                         /* debajo de la barra fija */
 }
+
+/* Con la barra apartada (al bajar), lo pegajoso sube hasta el marco */
+:root.nav-off { --nav-h: var(--pad-frame); }
 
 /* ---------- Piezas compartidas con el index ---------- */
 
@@ -383,12 +387,18 @@ body.has-buybar .toast { bottom: 96px; }
 
 /* ---------- Estructura de las subpáginas ---------- */
 
-.sub .frame { align-content: start; }
+.sub .frame {
+  align-content: start;
+  padding-top: calc(var(--pad-frame) * 2 + var(--bar-h));   /* hueco de la barra fija */
+}
 
+/* Una sola hoja de lino continua: las secciones (.panel) van seguidas, sin el marco negro entre
+   ellas. El index sí separa sus secciones en paneles. */
 .page {
   display: grid;
-  row-gap: var(--pad-frame);
   min-width: 0;
+  border-radius: var(--r-panel);
+  background: var(--linen);
 }
 
 .page:focus { outline: none; }
@@ -399,9 +409,10 @@ body.has-buybar .toast { bottom: 96px; }
   --gap: clamp(14px, 1.15vw, 26px);
   min-width: 0;
   padding: clamp(56px, 6vw, 112px) var(--side);
-  border-radius: var(--r-panel);
-  background: var(--linen);
 }
+
+/* Entre dos secciones basta el aire de abajo de la primera */
+.page > .panel + .panel { padding-top: 0; }
 
 .wrap {
   width: 100%;
@@ -419,101 +430,595 @@ body.has-buybar .toast { bottom: 96px; }
 
 .center { text-align: center; margin: clamp(28px, calc(40 * var(--u)), 48px) 0 0; }
 
-/* ---------- Barra superior ---------- */
+/* ---------- Barra superior (todo el sitio; nav.js) ----------
+   Fija arriba, dentro del marco negro: la tapa negra de alrededor hace que el contenido se pierda
+   por debajo como por una ventana. Se aparta al bajar (.is-hidden) y vuelve al subir; en el index
+   espera aparcada (.is-parked) hasta dejar atrás la portada. Tres menús desplegables: en
+   escritorio, paneles blancos bajo la barra; en el móvil, una hoja con acordeones. */
 
-.topbar {
-  position: sticky;
-  z-index: 40;
-  top: var(--pad-frame);
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 16px;
-  min-height: var(--bar-h);
-  padding: 8px 8px 8px clamp(16px, 1.8vw, 26px);
-  border-radius: var(--r-panel);
-  background: var(--linen);
-}
-
-/* El marco negro tapa lo que pasa por detrás de la barra (y el hueco de debajo) al hacer scroll */
-.topbar::before {
+/* Franja negra fija del marco: lo que sube se esconde bajo ella aunque la barra se aparte */
+body::before {
   content: "";
-  position: absolute;
-  z-index: -1;
-  inset: calc(var(--pad-frame) * -1) calc(var(--pad-frame) * -1.6) calc(var(--pad-frame) * -1);
+  position: fixed;
+  z-index: 58;
+  inset: 0 0 auto;
+  height: var(--pad-frame);
   background: var(--frame);
   pointer-events: none;
 }
 
-.topbar::after {
+.nav {
+  position: fixed;
+  z-index: 60;
+  top: var(--pad-frame);
+  left: calc(var(--pad-frame) * 1.6);
+  right: calc(var(--pad-frame) * 1.6);
+  transition: translate 0.55s var(--ease-soft), opacity 0.4s var(--ease-out), visibility 0s;
+}
+
+.nav.is-hidden,
+.nav.is-parked { translate: 0 calc(-100% - var(--pad-frame) * 2 - 6px); }
+
+.nav.is-parked {
+  opacity: 0;
+  visibility: hidden;
+  transition: translate 0.55s var(--ease-soft), opacity 0.4s var(--ease-out), visibility 0s 0.55s;
+}
+
+.nav__bar {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  height: var(--bar-h);
+  padding: 0 7px 0 clamp(16px, 1.6vw, 24px);
+  border-radius: var(--r-panel);
+}
+
+/* Tapa negra (el marco alrededor de la barra) y, encima, el lino de la barra */
+.nav__bar::before,
+.nav__bar::after {
   content: "";
   position: absolute;
   z-index: -1;
+  pointer-events: none;
+}
+
+.nav__bar::before {
+  inset: calc(var(--pad-frame) * -1) calc(var(--pad-frame) * -1.6) calc(var(--pad-frame) * -1);
+  background: var(--frame);
+}
+
+.nav__bar::after {
   inset: 0;
   border-radius: inherit;
   background: var(--linen);
 }
 
-.topbar__brand {
+.nav__brand {
+  justify-self: start;
   font-size: 20px;
   gap: 10px;
 }
 
-.topbar__brand .brand__mark { width: 38px; }
+.nav__brand .brand__mark {
+  width: 36px;
+  transition: rotate 1.2s var(--ease-out);
+}
 
-.topbar__nav ul {
+.nav__brand:hover .brand__mark { rotate: 45deg; }
+
+/* ----- Menús ----- */
+
+.nav__list {
   display: flex;
-  justify-content: center;
   gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.topbar__nav a {
+/* Píldora blanca que se desliza bajo el menú señalado (nav.js la coloca) */
+.nav__glide {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0;
+  height: 42px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 4px 12px -5px rgb(13 13 13 / 0.2);
+  opacity: 0;
+  translate: var(--gx, 0) -50%;
+  transition:
+    translate 0.5s var(--ease-out),
+    width 0.5s var(--ease-out),
+    opacity 0.3s var(--ease-out);
+  pointer-events: none;
+}
+
+.nav__link {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
-  height: 40px;
-  padding: 0 15px;
+  gap: 6px;
+  height: 42px;
+  padding: 0 14px 0 17px;
+  border: 0;
   border-radius: 999px;
+  background: none;
   color: var(--ink);
-  font: 450 14.5px/1 var(--font-ui);
+  font: 450 15px/1 var(--font-ui);
   letter-spacing: -0.01em;
+  cursor: pointer;
+}
+
+.nav__caret {
+  font-size: 12px;
+  opacity: 0.55;
+  transition: rotate 0.45s var(--ease-out), opacity 0.3s var(--ease-out);
+}
+
+.nav__item.is-open .nav__caret { rotate: -180deg; opacity: 1; }
+
+/* La sección en la que estás: un punto bajo su nombre */
+.nav__link > span { position: relative; }
+
+.nav__link.is-current > span::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 2px);
+  bottom: -9px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ----- Paneles (escritorio) ----- */
+
+.nav__panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  width: min(100%, 980px);
+  padding: 10px;
+  border-radius: calc(var(--r-panel) + 4px);
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 40px 80px -32px rgb(0 0 0 / 0.5);
+  opacity: 0;
+  visibility: hidden;
+  translate: -50% -8px;
+  scale: 0.985;
+  transform-origin: 50% 0;
+  transition:
+    opacity 0.22s var(--ease-out),
+    translate 0.5s var(--ease-out),
+    scale 0.5s var(--ease-out),
+    visibility 0s 0.5s;
+}
+
+/* Puente invisible entre la barra y el panel: el puntero puede bajar sin que se cierre */
+.nav__panel::before {
+  content: "";
+  position: absolute;
+  inset: -14px 0 100%;
+}
+
+.nav__item.is-open .nav__panel {
+  opacity: 1;
+  visibility: visible;
+  translate: -50% 0;
+  scale: 1;
+  transition:
+    opacity 0.25s var(--ease-out),
+    translate 0.5s var(--ease-out),
+    scale 0.5s var(--ease-out),
+    visibility 0s;
+}
+
+/* Tienda: los 4 productos y, al lado, comparar y cómo funciona el pedido */
+.nav__panel--shop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 276px;
+  gap: 10px;
+}
+
+.nav__products {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__product { position: relative; }
+
+.nav__pic {
+  display: grid;
+  grid-template-rows: 156px auto auto;
+  height: 100%;
+  padding: 12px 14px 16px;
+  border-radius: 20px;
+  background: var(--tile);
+  color: var(--ink);
+  text-decoration: none;
+  transition: background-color 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
+}
+
+.nav__pic img {
+  justify-self: center;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: translate 0.7s var(--ease-out), rotate 0.7s var(--ease-out);
+}
+
+.nav__pic:hover { background: #ebe9e6; }
+.nav__pic:hover img { translate: 0 -5px; rotate: -5deg; }
+.nav__pic[aria-current] { box-shadow: inset 0 0 0 1.5px var(--ink); }
+
+.nav__pname {
+  margin-top: 12px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.nav__price {
+  margin-top: 4px;
+  color: var(--stone);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.nav__add {
+  position: absolute;
+  right: 12px;
+  bottom: 14px;
+  width: 34px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 15px;
+  cursor: pointer;
+  transition: rotate 0.6s var(--ease-out), background-color 0.3s var(--ease-out), scale 0.4s var(--ease-out);
+}
+
+.nav__add:hover { rotate: 90deg; background: #262626; }
+.nav__add:active { scale: 0.92; }
+
+.nav__aside {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 20px;
+  background: var(--tint);
+}
+
+/* Fila con icono, título y una línea de ayuda (Tienda y Ayuda) */
+.nav__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px 9px 9px;
+  border-radius: 15px;
+  color: var(--ink);
   text-decoration: none;
   transition: background-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
 }
 
-.topbar__nav a:hover { background: rgb(13 13 13 / 0.05); }
-
-.topbar__nav a[aria-current="page"] {
+.nav__row > i {
+  flex: none;
+  width: 40px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
   background: var(--paper);
-  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 2px 8px -3px rgb(13 13 13 / 0.14);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.06);
+  font-size: 20px;
+  transition: background-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
 
-.topbar__end {
+.nav__row b {
+  display: block;
+  font: 500 14.5px/1.25 var(--font-ui);
+  letter-spacing: -0.01em;
+}
+
+.nav__row small {
+  display: block;
+  margin-top: 2px;
+  color: var(--stone);
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+.nav__row:hover,
+.nav__row[aria-current] {
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 6px 16px -10px rgb(13 13 13 / 0.3);
+}
+
+.nav__row:hover > i,
+.nav__row[aria-current] > i { background: var(--ink); color: var(--paper); }
+
+.nav__pledges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: auto 0 0;
+  padding: 10px 6px 4px;
+  list-style: none;
+}
+
+.nav__pledges li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 11px 0 9px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px rgb(13 13 13 / 0.1);
+  color: var(--stone);
+  font-size: 12.5px;
+}
+
+.nav__pledges i { color: var(--ink); font-size: 15px; }
+
+/* Aprende: guías a la izquierda; perfiles y estudios a la derecha */
+.nav__panel--learn {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 10px;
+  width: min(100%, 820px);
+}
+
+.nav__col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 14px 10px 10px;
+}
+
+.nav__col + .nav__col {
+  padding: 14px;
+  border-radius: 20px;
+  background: var(--tint);
+}
+
+.nav__h {
+  margin: 0 0 8px 10px;
+  color: var(--stone);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.nav__col + .nav__col .nav__h { margin-left: 0; }
+
+.nav__links {
+  display: grid;
+  gap: 1px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__links a {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  color: var(--ink);
+  font-size: 14.5px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  transition: background-color 0.3s var(--ease-out);
+}
+
+.nav__links small {
+  color: var(--stone);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nav__links a:hover,
+.nav__links a[aria-current] { background: var(--tint); }
+
+.nav__links--areas a {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  padding: 9px 0;
+  border-radius: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: -0.02em;
 }
 
-.topbar .dock { padding: 5px; }
-.topbar .dock__btn { width: 46px; font-size: 19px; }
+.nav__links--areas a:hover,
+.nav__links--areas a[aria-current] { background: none; text-decoration: underline; text-underline-offset: 0.2em; }
+.nav__links--areas i { font-size: 20px; }
 
-.topbar__menu {
-  display: none;
+.nav__more {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 46px;
-  padding: 0 16px 0 13px;
-  border: 0;
+  gap: 6px;
+  margin: 8px 0 0 10px;
+  padding-bottom: 2px;
+  color: var(--ink);
+  font: 500 13.5px/1.2 var(--font-ui);
+  text-decoration: none;
+  background: linear-gradient(currentColor 0 0) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.5s var(--ease-out);
+}
+
+.nav__col + .nav__col .nav__more { margin-left: 0; }
+.nav__more i { transition: translate 0.5s var(--ease-out); }
+.nav__more:hover { background-size: 100% 1px; }
+.nav__more:hover i { translate: 3px 0; }
+
+/* Estudios: una tarjeta negra, para que la evidencia destaque */
+.nav__card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: auto;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--frame);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.nav__col .nav__more + .nav__card { margin-top: 18px; }
+.nav__card > i:first-child { font-size: 26px; }
+.nav__card b { display: block; font: 500 15px/1.2 var(--font-ui); }
+.nav__card small { display: block; margin-top: 3px; color: rgb(255 255 255 / 0.6); font-size: 12.5px; line-height: 1.35; }
+
+.nav__card-go {
+  margin-left: auto;
+  font-size: 16px;
+  transition: translate 0.5s var(--ease-out);
+}
+
+.nav__card:hover .nav__card-go { translate: 2px -2px; }
+
+/* Ayuda: cinco filas */
+.nav__panel--help { width: min(100%, 440px); }
+
+.nav__rows {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ----- Pedido: consultar y carrito ----- */
+
+.nav__end {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
   border-radius: 999px;
+  background: #ecebea;
+}
+
+.nav__icon,
+.nav__cart {
+  position: relative;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 19px;
+  transition: background-color 0.3s var(--ease-out), translate 0.5s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.nav__icon {
+  width: 46px;
   background: var(--paper);
-  box-shadow: 0 0 0 1px rgb(13 13 13 / 0.08);
-  font: 500 14px/1 var(--font-ui);
+  color: var(--ink);
+}
+
+.nav__cart {
+  gap: 8px;
+  padding: 0 16px 0 15px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.nav__cart-label { font: 500 14px/1 var(--font-ui); letter-spacing: -0.01em; }
+
+.nav__cart .dock__count {
+  position: static;
+  margin-right: -6px;
+  box-shadow: none;
+}
+
+.nav__icon:hover,
+.nav__cart:hover { translate: 0 -2px; }
+.nav__cart:hover { background: #262626; }
+.nav__icon[aria-current],
+.nav__cart[aria-current] { box-shadow: 0 0 0 2px #ecebea, 0 0 0 3.5px var(--ink); }
+
+/* Botón del menú del móvil: dos rayas que se cruzan */
+.nav__burger {
+  display: none;
+  position: relative;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--paper);
   cursor: pointer;
 }
 
-.topbar__menu i { font-size: 18px; }
+.nav__burger span {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: translate 0.45s var(--ease-out), rotate 0.45s var(--ease-out);
+}
+
+.nav__burger span:first-child { translate: 0 -3.5px; }
+.nav__burger span:last-child { translate: 0 3.5px; }
+.nav.is-open .nav__burger span:first-child { translate: 0; rotate: 45deg; }
+.nav.is-open .nav__burger span:last-child { translate: 0; rotate: -45deg; }
+
+/* Cuánto llevas de la página: una línea fina en el borde de abajo de la barra */
+.nav__progress {
+  position: absolute;
+  left: var(--r-panel);
+  right: var(--r-panel);
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transform: scaleX(var(--p, 0));
+  transform-origin: 0 50%;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+:root.nav-lock { overflow: hidden; }
+
+/* Lo pegajoso acompaña a la barra cuando se aparta o vuelve */
+.pdp__gallery,
+.pinfo__aside,
+.cart__aside,
+.co__aside,
+.gbody__aside,
+.faqp__aside { transition: top 0.55s var(--ease-soft); }
 
 /* ---------- Migas de pan y encabezados ---------- */
 
@@ -3628,8 +4133,18 @@ body.has-buybar .toast { bottom: 96px; }
 /* ---------- Responsive ---------- */
 
 @media (max-width: 1180px) {
-  .topbar__nav a { padding: 0 11px; font-size: 14px; }
   .foot__in { grid-template-columns: minmax(0, 1fr); }
+
+  /* La Tienda en dos filas de producto para que el lateral no apriete */
+  .nav__panel--shop { grid-template-columns: minmax(0, 1fr) 248px; }
+  .nav__products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nav__pic { grid-template-rows: 112px auto auto; }
+}
+
+@media (max-width: 1040px) {
+  .nav__cart-label { display: none; }
+  .nav__cart { width: 46px; padding: 0; }
+  .nav__cart .dock__count { position: absolute; top: -4px; right: -4px; margin: 0; box-shadow: 0 0 0 2px #ecebea; }
 }
 
 @media (max-width: 1099px) {
@@ -3648,7 +4163,7 @@ body.has-buybar .toast { bottom: 96px; }
   .gbody__aside,
   .faqp__aside {
     z-index: 5;
-    top: calc(var(--pad-frame) * 2 + var(--bar-h));
+    top: var(--nav-h);
   }
 
   .pinfo__aside .mini,
@@ -3681,43 +4196,77 @@ body.has-buybar .toast { bottom: 96px; }
 }
 
 @media (max-width: 900px) {
-  :root { --bar-h: 64px; }
+  :root { --bar-h: 60px; }
 
-  .topbar {
-    grid-template-columns: auto minmax(0, 1fr);
+  /* Móvil: logo, pedido y menú; los tres menús, en una hoja con acordeones */
+  .nav__bar {
+    grid-template-columns: minmax(0, 1fr) auto;
     padding-left: 14px;
   }
 
-  .topbar__end { justify-self: end; }
-  .topbar__menu { display: inline-flex; }
+  .nav__glide { display: none; }
+  .nav__icon,
+  .nav__cart,
+  .nav__burger { width: 42px; height: 42px; }
+  .nav__burger { display: block; }
 
-  .topbar__nav {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    right: 0;
+  .nav__main {
+    position: fixed;
+    top: calc(var(--pad-frame) * 2 + var(--bar-h));
+    left: calc(var(--pad-frame) * 1.6);
+    right: calc(var(--pad-frame) * 1.6);
+    max-height: calc(100dvh - var(--pad-frame) * 3 - var(--bar-h));
     display: none;
-    padding: 10px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 8px;
     border-radius: 24px;
     background: var(--paper);
     box-shadow: 0 0 0 1px rgb(13 13 13 / 0.05), 0 30px 60px -24px rgb(0 0 0 / 0.5);
   }
 
-  .topbar.is-open .topbar__nav { display: block; animation: rise 0.45s var(--ease-out) both; }
-  .topbar__nav ul { flex-direction: column; gap: 2px; }
+  .nav.is-open .nav__main { display: block; animation: rise 0.45s var(--ease-out) both; }
+  .nav__list { flex-direction: column; gap: 2px; }
 
-  .topbar__nav a {
+  .nav__link {
     width: 100%;
-    height: 54px;
+    height: 58px;
+    justify-content: space-between;
     padding: 0 18px;
     border-radius: 16px;
     font-family: var(--font-display);
-    font-size: 24px;
+    font-size: 25px;
     letter-spacing: -0.02em;
   }
 
-  .topbar__nav a[aria-current="page"] { background: var(--linen); box-shadow: none; }
-  .topbar .dock__btn { width: 42px; }
+  .nav__item.is-open > .nav__link { background: var(--linen); }
+  .nav__caret { font-size: 16px; }
+  .nav__link.is-current > span::after { left: auto; right: -12px; bottom: calc(50% - 2px); }
+
+  .nav__panel,
+  .nav__item.is-open .nav__panel {
+    position: static;
+    display: none;
+    width: auto;
+    padding: 8px 4px 14px;
+    border-radius: 0;
+    box-shadow: none;
+    opacity: 1;
+    visibility: visible;
+    translate: none;
+    scale: none;
+    transition: none;
+  }
+
+  .nav__panel::before { display: none; }
+  .nav__item.is-open .nav__panel { display: grid; animation: rise 0.45s var(--ease-out) both; }
+
+  .nav__panel--shop,
+  .nav__panel--learn { grid-template-columns: minmax(0, 1fr); }
+  .nav__products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .nav__pic { grid-template-rows: 104px auto auto; }
+  .nav__col { padding: 6px 2px; }
+  .nav__col + .nav__col { padding: 14px; }
 
   .phead__in--split,
   .ghead__in,
@@ -3738,6 +4287,7 @@ body.has-buybar .toast { bottom: 96px; }
 
 @media (max-width: 640px) {
   .panel { --u: 0.8px; padding: 48px 18px; }
+  .page > .panel + .panel { padding-top: 0; }
   .phead { padding-top: 28px; padding-bottom: 44px; }
   .pdp,
   .cart,
@@ -3746,9 +4296,7 @@ body.has-buybar .toast { bottom: 96px; }
   .ghead,
   .prof { padding-top: 24px; }
 
-  .topbar__brand span { display: none; }
-  .topbar__menu span { display: none; }
-  .topbar__menu { width: 42px; height: 42px; padding: 0; justify-content: center; }
+  .nav__brand span { display: none; }
 
   .pgrid,
   .pgrid--3,
@@ -3847,5 +4395,19 @@ body.has-buybar .toast { bottom: 96px; }
   .faq__all-go,
   .meter__bar span,
   .acc.is-ready .faq__panel,
-  .acc.is-ready .faq__body p { transition: none; }
+  .acc.is-ready .faq__body p,
+  .nav,
+  .nav__glide,
+  .nav__panel,
+  .nav__item.is-open .nav__panel,
+  .nav__caret,
+  .nav__brand .brand__mark,
+  .nav__pic img,
+  .nav__add,
+  .nav__icon,
+  .nav__cart,
+  .nav__burger span { transition: none; }
+
+  .nav.is-open .nav__main,
+  .nav__item.is-open .nav__panel { animation: none; }
 }

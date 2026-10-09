@@ -1,10 +1,11 @@
 // Genera las subpáginas de lab-lab a partir de _src/ y comprueba que no haya enlaces internos rotos.
 //   node build.mjs
-// No toca index.html ni adn/: esos se editan a mano.
+// En index.html solo reescribe la barra superior y el pie (entre sus marcas); el resto del index y
+// adn/ se editan a mano.
 import { mkdirSync, writeFileSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { dirname, join, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { page, footer, makeR } from './_src/layout.mjs';
+import { page, footer, topbar, makeR } from './_src/layout.mjs';
 import { shopPages } from './_src/pages-shop.mjs';
 import { infoPages } from './_src/pages-info.mjs';
 import { PRODUCTS, SHIPPING, COUNTRIES } from './_src/data.mjs';
@@ -29,15 +30,20 @@ const catalog = {
 writeFileSync(join(ROOT, 'catalog.js'),
   `/* Generado por build.mjs a partir de _src/data.mjs: no lo edites a mano. */\nwindow.CATALOG = ${JSON.stringify(catalog, null, 2)};\n`);
 
-// Pie del index: se escribe entre sus dos marcas para que sea el mismo que el de las subpáginas
+// Barra superior y pie del index: se escriben entre sus marcas para que sean los mismos que los de
+// las subpáginas
 const indexFile = join(ROOT, 'index.html');
-const indexHtml = readFileSync(indexFile, 'utf8');
-const marks = /(<!-- pie:inicio -->)[\s\S]*?(\s*<!-- pie:fin -->)/;
-if (marks.test(indexHtml)) {
-  writeFileSync(indexFile, indexHtml.replace(marks, (_, a, b) => `${a}${footer(makeR(''))}${b}`));
-} else {
-  console.warn('index.html: no encuentro las marcas <!-- pie:inicio --> / <!-- pie:fin -->; el pie no se ha actualizado.');
+let indexHtml = readFileSync(indexFile, 'utf8');
+const blocks = [
+  ['barra', () => topbar(makeR(''), '', { home: true })],
+  ['pie', () => footer(makeR(''))],
+];
+for (const [name, html] of blocks) {
+  const marks = new RegExp(`(<!-- ${name}:inicio -->)[\\s\\S]*?(\\s*<!-- ${name}:fin -->)`);
+  if (marks.test(indexHtml)) indexHtml = indexHtml.replace(marks, (_, a, b) => `${a}${html()}${b}`);
+  else console.warn(`index.html: no encuentro las marcas <!-- ${name}:inicio --> / <!-- ${name}:fin -->; no se ha actualizado.`);
 }
+writeFileSync(indexFile, indexHtml);
 
 // Enlaces internos rotos (en las páginas generadas y en el index)
 const files = [join(ROOT, 'index.html'), ...pages.map((p) => join(ROOT, p.path, 'index.html'))];

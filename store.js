@@ -141,7 +141,7 @@
         el.classList.add('is-bump');
       }
     });
-    document.querySelectorAll('.dock__btn[href$="carrito/"]').forEach((a) => {
+    document.querySelectorAll('.dock__btn[href$="carrito/"], [data-cart-link]').forEach((a) => {
       a.setAttribute('aria-label', n ? `Carrito: ${plural(n, 'producto', 'productos')}` : 'Carrito vacío');
     });
     lastCount = n;

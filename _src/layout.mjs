@@ -1,8 +1,8 @@
 // Estructura común de las subpáginas: <head>, barra superior, pie y piezas reutilizables.
 // Todas las rutas son relativas: r('guias/') desde productos/producto-1/ da ../../guias/.
-import { SITE, PRODUCTS, d } from './data.mjs';
+import { SITE, SHIPPING, PRODUCTS, GUIDES, PROFILES, d } from './data.mjs';
 
-export const VERSION = 3;   // súbelo para forzar la recarga de site.css / site.js / store.js
+export const VERSION = 6;   // súbelo para forzar la recarga de site.css / site.js / store.js
 
 export const money = (n) =>
   new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n).replace(/\s/g, '&nbsp;');
@@ -175,38 +175,114 @@ export function paperCard(r, s, i) {
 
 /* ---------- Página completa ---------- */
 
-const NAV = [
-  ['productos/', 'Tienda'],
-  ['guias/', 'Guías'],
-  ['evidencia/', 'Estudios'],
-  ['envios/', 'Envíos'],
-  ['preguntas-frecuentes/', 'FAQ'],
-  ['contacto/', 'Contacto'],
+/* ---------- Barra superior (todo el sitio; el index la recibe de build.mjs) ----------
+   Tres menús por lo que busca el cliente: comprar (Tienda), entender el producto (Aprende) y
+   resolver una duda o un pedido (Ayuda). Fija arriba: se aparta al bajar y vuelve al subir
+   (nav.js); en el index aparece al dejar atrás la portada, que ya tiene logo y carrito.
+   Sin JS, los botones de cada menú llevan a su página (data-href) y todo son enlaces normales. */
+
+const HELP = [
+  ['envios/', 'ph-truck', 'Envíos y plazos', `${SHIPPING.days}, gratis desde ${SHIPPING.freeFrom} €`],
+  ['devoluciones/', 'ph-arrow-u-up-left', 'Devoluciones', '14 días para desistir'],
+  ['preguntas-frecuentes/', 'ph-chats-circle', 'Preguntas frecuentes', 'Pago, aduana, uso del producto…'],
+  ['cuenta/', 'ph-package', 'Consultar mi pedido', 'Con tu email, sin crear cuenta'],
+  ['contacto/', 'ph-envelope-simple', 'Contacto', 'Escríbenos tu duda'],
 ];
 
-function topbar(r, path) {
-  const current = (href) => path === href || (href !== '' && path.startsWith(href));
+export function topbar(r, path, { home = false } = {}) {
+  const on = (href) => path === href || (href !== '' && path.startsWith(href));
+  const cur = (href) => (on(href) ? ' aria-current="page"' : '');
+  const shopOn = on('productos/') || on('carrito/') || on('checkout/');
+  const learnOn = on('guias/') || on('perfiles/') || on('evidencia/');
+  const helpOn = HELP.some(([href]) => on(href));
+  const caret = '<i class="ph ph-caret-down nav__caret" aria-hidden="true"></i>';
+  const trigger = (id, label, href, isOn) =>
+    `<button class="nav__link${isOn ? ' is-current' : ''}" type="button" aria-expanded="false" aria-controls="nav-${id}" data-href="${href}"><span>${label}</span>${caret}</button>`;
+
+  const shop = `
+            <div class="nav__panel nav__panel--shop" id="nav-tienda" data-nav-panel>
+              <ul class="nav__products">${PRODUCTS.map((p) => `
+                <li class="nav__product">
+                  <a class="nav__pic" href="${r(`productos/${p.slug}/`)}"${cur(`productos/${p.slug}/`)}>
+                    <img src="${r(p.img)}" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                    <span class="nav__pname">${p.name}</span>
+                    <span class="nav__price">${money(p.price)}</span>
+                  </a>
+                  <button class="nav__add" type="button" data-add="${p.id}" aria-label="Añadir ${p.name} al carrito"><i class="ph ph-plus" aria-hidden="true"></i></button>
+                </li>`).join('')}
+              </ul>
+              <div class="nav__aside">
+                <a class="nav__row" href="${r('productos/')}"${cur('productos/')}><i class="ph-light ph-squares-four" aria-hidden="true"></i><span><b>Ver todos los productos</b><small>Fichas, formatos y precios</small></span></a>
+                <a class="nav__row" href="${r('#comparar')}"><i class="ph-light ph-columns" aria-hidden="true"></i><span><b>Compararlos</b><small>Los 4, lado a lado</small></span></a>
+                <a class="nav__row" href="${r('#pedido')}"><i class="ph-light ph-path" aria-hidden="true"></i><span><b>Cómo funciona tu pedido</b><small>4 pasos, sin pago por adelantado</small></span></a>
+                <ul class="nav__pledges">
+                  <li><i class="ph-light ph-hand-coins" aria-hidden="true"></i>Pagas al recibirlo</li>
+                  <li><i class="ph-light ph-package" aria-hidden="true"></i>Envío discreto</li>
+                </ul>
+              </div>
+            </div>`;
+
+  const learn = `
+            <div class="nav__panel nav__panel--learn" id="nav-aprende" data-nav-panel>
+              <div class="nav__col">
+                <p class="nav__h">Guías</p>
+                <ul class="nav__links">${GUIDES.map((g) => `
+                  <li><a href="${r(`guias/${g.slug}/`)}"${cur(`guias/${g.slug}/`)}><small>${g.tag}</small>${g.title}</a></li>`).join('')}
+                </ul>
+                <a class="nav__more" href="${r('guias/')}"${cur('guias/')}>Todas las guías <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+              </div>
+              <div class="nav__col">
+                <p class="nav__h">¿Para quién?</p>
+                <ul class="nav__links nav__links--areas">${PROFILES.filter((p) => p.area).map((p) => `
+                  <li><a href="${r(`perfiles/${p.slug}/`)}"${cur(`perfiles/${p.slug}/`)}><i class="ph-light ${p.icon}" aria-hidden="true"></i>${p.area}</a></li>`).join('')}
+                </ul>
+                <a class="nav__more" href="${r('#perfiles')}">Los 6 perfiles <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+                <a class="nav__card" href="${r('evidencia/')}"${cur('evidencia/')}>
+                  <i class="ph-light ph-flask" aria-hidden="true"></i>
+                  <span><b>Estudios</b><small>La evidencia científica, con sus fuentes</small></span>
+                  <i class="ph ph-arrow-up-right nav__card-go" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>`;
+
+  const help = `
+            <div class="nav__panel nav__panel--help" id="nav-ayuda" data-nav-panel>
+              <ul class="nav__rows">${HELP.map(([href, icon, label, sub]) => `
+                <li><a class="nav__row" href="${r(href)}"${cur(href)}><i class="ph-light ${icon}" aria-hidden="true"></i><span><b>${label}</b><small>${sub}</small></span></a></li>`).join('')}
+              </ul>
+            </div>`;
+
   return `
-  <header class="topbar" data-topbar>
-    <a class="brand topbar__brand" href="${r('')}" aria-label="${SITE.brand}, inicio">
-      ${brandMark()}
-      <span translate="no">${SITE.brand}</span>
-    </a>
-    <nav class="topbar__nav" id="menu" aria-label="Principal">
-      <ul>${NAV.map(([href, label]) => `<li><a href="${r(href)}"${current(href) ? ' aria-current="page"' : ''}>${label}</a></li>`).join('')}</ul>
-    </nav>
-    <div class="topbar__end">
-      <button class="topbar__menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menú">
-        <i class="ph ph-list" aria-hidden="true"></i><span>Menú</span>
-      </button>
-      <nav class="dock" aria-label="Tu pedido">
-        <a class="dock__btn" href="${r('carrito/')}" aria-label="Carrito"${path === 'carrito/' ? ' aria-current="page"' : ''}>
-          <i class="ph ph-handbag" aria-hidden="true"></i><span class="dock__count" data-cart-count hidden>0</span>
-        </a>
-        <a class="dock__btn" href="${r('cuenta/')}" aria-label="Consultar mi pedido"${path === 'cuenta/' ? ' aria-current="page"' : ''}>
-          <i class="ph ph-user" aria-hidden="true"></i>
-        </a>
+  <header class="nav${home ? ' is-home is-parked' : ''}" data-nav${home ? ' data-nav-home' : ''}>
+    <div class="nav__bar">
+      <a class="brand nav__brand" href="${r('')}" aria-label="${SITE.brand}, inicio">
+        ${brandMark()}
+        <span translate="no">${SITE.brand}</span>
+      </a>
+      <nav class="nav__main" id="nav-main" aria-label="Principal">
+        <span class="nav__glide" aria-hidden="true"></span>
+        <ul class="nav__list">
+          <li class="nav__item" data-nav-item>
+            ${trigger('tienda', 'Tienda', r('productos/'), shopOn)}${shop}
+          </li>
+          <li class="nav__item" data-nav-item>
+            ${trigger('aprende', 'Aprende', r('guias/'), learnOn)}${learn}
+          </li>
+          <li class="nav__item" data-nav-item>
+            ${trigger('ayuda', 'Ayuda', r('preguntas-frecuentes/'), helpOn)}${help}
+          </li>
+        </ul>
       </nav>
+      <div class="nav__end">
+        <a class="nav__icon" href="${r('cuenta/')}" aria-label="Consultar mi pedido"${cur('cuenta/')}><i class="ph ph-package" aria-hidden="true"></i></a>
+        <a class="nav__cart" href="${r('carrito/')}" aria-label="Carrito" data-cart-link${cur('carrito/')}>
+          <i class="ph ph-handbag" aria-hidden="true"></i><span class="nav__cart-label">Carrito</span><span class="dock__count" data-cart-count hidden>0</span>
+        </a>
+        <button class="nav__burger" type="button" aria-expanded="false" aria-controls="nav-main" aria-label="Menú">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span>
+        </button>
+      </div>
+      <span class="nav__progress" aria-hidden="true"></span>
     </div>
   </header>`;
 }
@@ -260,7 +336,7 @@ ${noindex ? '  <meta name="robots" content="noindex">\n' : ''}  <meta name="them
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Instrument+Serif:ital@1&family=Questrial&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css">
-  <link rel="stylesheet" href="${r('styles.css')}?v=33">
+  <link rel="stylesheet" href="${r('styles.css')}?v=40">
   <link rel="stylesheet" href="${r('site.css')}${v}">
 ${ld ? `  <script type="application/ld+json">${JSON.stringify(ld)}</script>\n` : ''}</head>
 <body class="sub ${bodyClass}" data-root="${r('') === './' ? '' : r('')}">
@@ -276,6 +352,7 @@ ${footer(r)}
   <script src="${r('catalog.js')}${v}" defer></script>
   <script src="${r('store.js')}${v}" defer></script>
   <script src="${r('site.js')}${v}" defer></script>
+  <script src="${r('nav.js')}${v}" defer></script>
 ${scripts.map((s) => `  <script src="${r(s)}${v}" defer></script>`).join('\n')}
 </body>
 </html>

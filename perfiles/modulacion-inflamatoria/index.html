@@ -12,33 +12,125 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Instrument+Serif:ital@1&family=Questrial&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css">
-  <link rel="stylesheet" href="../../styles.css?v=33">
-  <link rel="stylesheet" href="../../site.css?v=3">
+  <link rel="stylesheet" href="../../styles.css?v=40">
+  <link rel="stylesheet" href="../../site.css?v=6">
 </head>
 <body class="sub is-profile" data-root="../../">
   <a class="skip" href="#contenido">Saltar al contenido</a>
   <div class="frame">
 
-  <header class="topbar" data-topbar>
-    <a class="brand topbar__brand" href="../../" aria-label="Brand, inicio">
-      <svg class="brand__mark" viewBox="-50 -50 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(0)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(15)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(30)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(45)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(60)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(75)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(90)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(105)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(120)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(135)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(150)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(165)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(180)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(195)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(210)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(225)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(240)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(255)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(270)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(285)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(300)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(315)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(330)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(345)"/></g><circle r="5.5" fill="currentColor"/></svg>
-      <span translate="no">Brand</span>
-    </a>
-    <nav class="topbar__nav" id="menu" aria-label="Principal">
-      <ul><li><a href="../../productos/">Tienda</a></li><li><a href="../../guias/">Guías</a></li><li><a href="../../evidencia/">Estudios</a></li><li><a href="../../envios/">Envíos</a></li><li><a href="../../preguntas-frecuentes/">FAQ</a></li><li><a href="../../contacto/">Contacto</a></li></ul>
-    </nav>
-    <div class="topbar__end">
-      <button class="topbar__menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menú">
-        <i class="ph ph-list" aria-hidden="true"></i><span>Menú</span>
-      </button>
-      <nav class="dock" aria-label="Tu pedido">
-        <a class="dock__btn" href="../../carrito/" aria-label="Carrito">
-          <i class="ph ph-handbag" aria-hidden="true"></i><span class="dock__count" data-cart-count hidden>0</span>
-        </a>
-        <a class="dock__btn" href="../../cuenta/" aria-label="Consultar mi pedido">
-          <i class="ph ph-user" aria-hidden="true"></i>
-        </a>
+  <header class="nav" data-nav>
+    <div class="nav__bar">
+      <a class="brand nav__brand" href="../../" aria-label="Brand, inicio">
+        <svg class="brand__mark" viewBox="-50 -50 100 100" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(0)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(15)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(30)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(45)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(60)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(75)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(90)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(105)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(120)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(135)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(150)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(165)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(180)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(195)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(210)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(225)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(240)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(255)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(270)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(285)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(300)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(315)"/><line x1="0" y1="-7" x2="0" y2="-47" transform="rotate(330)"/><line x1="0" y1="-7" x2="0" y2="-33" transform="rotate(345)"/></g><circle r="5.5" fill="currentColor"/></svg>
+        <span translate="no">Brand</span>
+      </a>
+      <nav class="nav__main" id="nav-main" aria-label="Principal">
+        <span class="nav__glide" aria-hidden="true"></span>
+        <ul class="nav__list">
+          <li class="nav__item" data-nav-item>
+            <button class="nav__link" type="button" aria-expanded="false" aria-controls="nav-tienda" data-href="../../productos/"><span>Tienda</span><i class="ph ph-caret-down nav__caret" aria-hidden="true"></i></button>
+            <div class="nav__panel nav__panel--shop" id="nav-tienda" data-nav-panel>
+              <ul class="nav__products">
+                <li class="nav__product">
+                  <a class="nav__pic" href="../../productos/producto-1/">
+                    <img src="../../assets/product1.webp" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                    <span class="nav__pname">Producto 1</span>
+                    <span class="nav__price">24,90&nbsp;€</span>
+                  </a>
+                  <button class="nav__add" type="button" data-add="p1" aria-label="Añadir Producto 1 al carrito"><i class="ph ph-plus" aria-hidden="true"></i></button>
+                </li>
+                <li class="nav__product">
+                  <a class="nav__pic" href="../../productos/producto-2/">
+                    <img src="../../assets/product1.webp" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                    <span class="nav__pname">Producto 2</span>
+                    <span class="nav__price">34,90&nbsp;€</span>
+                  </a>
+                  <button class="nav__add" type="button" data-add="p2" aria-label="Añadir Producto 2 al carrito"><i class="ph ph-plus" aria-hidden="true"></i></button>
+                </li>
+                <li class="nav__product">
+                  <a class="nav__pic" href="../../productos/producto-3/">
+                    <img src="../../assets/product1.webp" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                    <span class="nav__pname">Producto 3</span>
+                    <span class="nav__price">44,90&nbsp;€</span>
+                  </a>
+                  <button class="nav__add" type="button" data-add="p3" aria-label="Añadir Producto 3 al carrito"><i class="ph ph-plus" aria-hidden="true"></i></button>
+                </li>
+                <li class="nav__product">
+                  <a class="nav__pic" href="../../productos/producto-4/">
+                    <img src="../../assets/product1.webp" width="1244" height="2294" alt="" loading="lazy" decoding="async">
+                    <span class="nav__pname">Producto 4</span>
+                    <span class="nav__price">59,90&nbsp;€</span>
+                  </a>
+                  <button class="nav__add" type="button" data-add="p4" aria-label="Añadir Producto 4 al carrito"><i class="ph ph-plus" aria-hidden="true"></i></button>
+                </li>
+              </ul>
+              <div class="nav__aside">
+                <a class="nav__row" href="../../productos/"><i class="ph-light ph-squares-four" aria-hidden="true"></i><span><b>Ver todos los productos</b><small>Fichas, formatos y precios</small></span></a>
+                <a class="nav__row" href="../../#comparar"><i class="ph-light ph-columns" aria-hidden="true"></i><span><b>Compararlos</b><small>Los 4, lado a lado</small></span></a>
+                <a class="nav__row" href="../../#pedido"><i class="ph-light ph-path" aria-hidden="true"></i><span><b>Cómo funciona tu pedido</b><small>4 pasos, sin pago por adelantado</small></span></a>
+                <ul class="nav__pledges">
+                  <li><i class="ph-light ph-hand-coins" aria-hidden="true"></i>Pagas al recibirlo</li>
+                  <li><i class="ph-light ph-package" aria-hidden="true"></i>Envío discreto</li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li class="nav__item" data-nav-item>
+            <button class="nav__link is-current" type="button" aria-expanded="false" aria-controls="nav-aprende" data-href="../../guias/"><span>Aprende</span><i class="ph ph-caret-down nav__caret" aria-hidden="true"></i></button>
+            <div class="nav__panel nav__panel--learn" id="nav-aprende" data-nav-panel>
+              <div class="nav__col">
+                <p class="nav__h">Guías</p>
+                <ul class="nav__links">
+                  <li><a href="../../guias/que-es/"><small>Fundamentos</small>¿Qué es [producto]?</a></li>
+                  <li><a href="../../guias/para-que-se-usa/"><small>Usos</small>¿Para qué se usa [producto]?</a></li>
+                  <li><a href="../../guias/como-se-toma/"><small>Uso y dosis</small>¿Cómo se toma [producto] y en qué dosis?</a></li>
+                  <li><a href="../../guias/efectos-secundarios/"><small>Seguridad</small>¿Qué efectos secundarios e interacciones tiene?</a></li>
+                  <li><a href="../../guias/quien-no-deberia-usarlo/"><small>Seguridad</small>¿Quién no debería usar [producto]?</a></li>
+                  <li><a href="../../guias/mitos-y-verdades/"><small>Mitos</small>Mitos y verdades sobre [producto]</a></li>
+                </ul>
+                <a class="nav__more" href="../../guias/">Todas las guías <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+              </div>
+              <div class="nav__col">
+                <p class="nav__h">¿Para quién?</p>
+                <ul class="nav__links nav__links--areas">
+                  <li><a href="../../perfiles/neuro-regulacion/"><i class="ph-light ph-microscope" aria-hidden="true"></i>Neuro-regulación</a></li>
+                  <li><a href="../../perfiles/cronobiologia-y-sueno/"><i class="ph-light ph-moon-stars" aria-hidden="true"></i>Cronobiología y sueño</a></li>
+                  <li><a href="../../perfiles/modulacion-inflamatoria/" aria-current="page"><i class="ph-light ph-heartbeat" aria-hidden="true"></i>Modulación inflamatoria</a></li>
+                </ul>
+                <a class="nav__more" href="../../#perfiles">Los 6 perfiles <i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+                <a class="nav__card" href="../../evidencia/">
+                  <i class="ph-light ph-flask" aria-hidden="true"></i>
+                  <span><b>Estudios</b><small>La evidencia científica, con sus fuentes</small></span>
+                  <i class="ph ph-arrow-up-right nav__card-go" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+          </li>
+          <li class="nav__item" data-nav-item>
+            <button class="nav__link" type="button" aria-expanded="false" aria-controls="nav-ayuda" data-href="../../preguntas-frecuentes/"><span>Ayuda</span><i class="ph ph-caret-down nav__caret" aria-hidden="true"></i></button>
+            <div class="nav__panel nav__panel--help" id="nav-ayuda" data-nav-panel>
+              <ul class="nav__rows">
+                <li><a class="nav__row" href="../../envios/"><i class="ph-light ph-truck" aria-hidden="true"></i><span><b>Envíos y plazos</b><small>3–7 días laborables, gratis desde 150 €</small></span></a></li>
+                <li><a class="nav__row" href="../../devoluciones/"><i class="ph-light ph-arrow-u-up-left" aria-hidden="true"></i><span><b>Devoluciones</b><small>14 días para desistir</small></span></a></li>
+                <li><a class="nav__row" href="../../preguntas-frecuentes/"><i class="ph-light ph-chats-circle" aria-hidden="true"></i><span><b>Preguntas frecuentes</b><small>Pago, aduana, uso del producto…</small></span></a></li>
+                <li><a class="nav__row" href="../../cuenta/"><i class="ph-light ph-package" aria-hidden="true"></i><span><b>Consultar mi pedido</b><small>Con tu email, sin crear cuenta</small></span></a></li>
+                <li><a class="nav__row" href="../../contacto/"><i class="ph-light ph-envelope-simple" aria-hidden="true"></i><span><b>Contacto</b><small>Escríbenos tu duda</small></span></a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
       </nav>
+      <div class="nav__end">
+        <a class="nav__icon" href="../../cuenta/" aria-label="Consultar mi pedido"><i class="ph ph-package" aria-hidden="true"></i></a>
+        <a class="nav__cart" href="../../carrito/" aria-label="Carrito" data-cart-link>
+          <i class="ph ph-handbag" aria-hidden="true"></i><span class="nav__cart-label">Carrito</span><span class="dock__count" data-cart-count hidden>0</span>
+        </a>
+        <button class="nav__burger" type="button" aria-expanded="false" aria-controls="nav-main" aria-label="Menú">
+          <span aria-hidden="true"></span><span aria-hidden="true"></span>
+        </button>
+      </div>
+      <span class="nav__progress" aria-hidden="true"></span>
     </div>
   </header>
     <main class="page" id="contenido" tabindex="-1">
@@ -248,9 +340,10 @@
     </div>
   </footer>
 
-  <script src="../../catalog.js?v=3" defer></script>
-  <script src="../../store.js?v=3" defer></script>
-  <script src="../../site.js?v=3" defer></script>
+  <script src="../../catalog.js?v=6" defer></script>
+  <script src="../../store.js?v=6" defer></script>
+  <script src="../../site.js?v=6" defer></script>
+  <script src="../../nav.js?v=6" defer></script>
 
 </body>
 </html>
